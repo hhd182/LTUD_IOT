@@ -1,20 +1,24 @@
 import { PrismaClient } from '@prisma/client';
 import { convertDateFormat } from '../logic/logic.js';
+import mqttClient from './mqttCtrl.js';
 
 const prisma = new PrismaClient();
 
 export const newAction = async (req, res) => {
     try {
-        const { device, action } = req.body;
-        if (!action) {
-            throw new Error("Missing 'action' of fan field in request body.");
+        const { device, action } = req.params;
+        let result, topic, message;
+        if (device === 'light' || device === 'fan') {
+            topic = `${device}control`;
+            message = action.toUpperCase();
+            mqttClient.publish(topic, message);
+            result = await prisma.actionHistory.create({
+                data: {
+                    device,
+                    action
+                }
+            });
         }
-        const result = await prisma.actionHistory.create({
-            data: {
-                device,
-                action
-            }
-        });
         return res.status(200).json(result);
     } catch (error) {
         console.error("Error creating new data sensor:", error);

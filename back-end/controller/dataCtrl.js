@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { sortDataAscending, sortDataDescending } from '../logic/logic.js';
+import { convertDateFormatToVN } from '../logic/logic.js';
 
 const prisma = new PrismaClient();
 
@@ -43,6 +43,7 @@ export const getDataSensor = async (req, res) => {
     try {
         const { column, value, page, columnsort, typesort } = req.query;
 
+        // Khong nhap gia tri khi tim kiem tat ca
         const searchAll = column === "all";
         if (searchAll && value) {
             return res.status(400).json({ error: "When searching for 'all', you are not allowed to enter a 'value'!" });
@@ -66,64 +67,55 @@ export const getDataSensor = async (req, res) => {
             where: searchAll ? {} : { [column]: valueSearch },
             skip: next,
             take: 10,
-            orderBy: {
-                createdAt: 'desc'
-            }
+            // orderBy: {
+            //     createdAt: 'desc'
+            // }
         });
 
         if (!data || data.length === 0) {
             return res.status(404).json({ error: `No data found with ${column} equal to ${value}` });
         }
 
+        data.forEach(item => {
+            item.createdAt = convertDateFormatToVN(item.createdAt);
+        });
+
+        let avalue;
+        let bvalue;
+        data.sort((a, b) => {
+            switch (columnsort) {
+                case 'id':
+                    avalue = a.id;
+                    bvalue = b.id
+                    break;
+                case 'createdAt':
+                    avalue = a.createdAt
+                    bvalue = b.createdAt
+                    break
+                case 'temperature':
+                    avalue = a.temperature
+                    bvalue = b.temperature
+                    break
+                case 'humidity':
+                    avalue = a.humidity
+                    bvalue = b.humidity
+                    break
+                case 'light':
+                    avalue = a.light
+                    bvalue = b.light
+                    break
+                default:
+                    break
+            }
+
+            if (typesort === 'ASC')
+                return avalue - bvalue
+            return bvalue - avalue
+        })
+
         return res.status(200).json(data);
     } catch (error) {
         console.error("Error searching data in dataSensor:", error);
-        return res.status(500).json({ error: "Internal server error" });
-    }
-};
-
-export const sortByColumnMinToMax = async (req, res) => {
-    try {
-        const { columnsort } = req.query;
-
-        if (!columnsort) {
-            return res.status(400).json({ error: "Missing 'column' parameter" });
-        }
-
-        const data = await getDataSensor(req, res);
-
-        if (!data || data.length === 0) {
-            return res.status(404).json({ error: "No data found" });
-        }
-
-        const sortedData = sortDataAscending(data, columnsort);
-
-        return res.status(200).json(sortedData);
-    } catch (error) {
-        console.error("Error sorting data:", error);
-        return res.status(500).json({ error: "Internal server error" });
-    }
-};
-
-export const sortByColumnMaxToMin = async (req, res) => {
-    try {
-        const { columnsort } = req.query;
-
-        if (!columnsort) {
-            return res.status(400).json({ error: "Missing 'column' parameter" });
-        }
-
-        const data = await getDataSensor(req, res);
-
-        if (!data || data.length === 0) {
-            return res.status(404).json({ error: "No data found" });
-        }
-
-        const sortedData = sortDataDescending(data, columnsort);
-
-        return res.status(200).json(sortedData);
-    } catch (error) {
-        console.error("Error sorting data:", error);
         return res.status(500).json({ error: "Internal server error" });
     }
 };

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { newDataSensor, getFirstData, getDataSensor, sortByColumnMinToMax } from "../controller/dataCtrl.js";
+import { newDataSensor, getFirstData, getDataSensor } from "../controller/dataCtrl.js";
 
 const dataRoutes = Router();
 
