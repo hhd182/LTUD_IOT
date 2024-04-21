@@ -9,8 +9,7 @@
 3. [Frontend](#frontend)
     - [Installation](#installation-1)
     - [Running](#running-1)
-4. [Hardware](#hardware)
-5. [API DOCS](#api-docs)
+4. [API DOCS](#api-docs)
 ### Clone
 
 ```bash
