@@ -23,7 +23,7 @@ export const newData = async (data) => {
     try {
         const dataSensor = JSON.parse(data)
         const { temperature, humidity, light } = dataSensor
-        const result = await prisma.dataSensor.create({
+        await prisma.dataSensor.create({
             data: {
                 temperature,
                 humidity,
@@ -34,6 +34,53 @@ export const newData = async (data) => {
         console.error("Error creating new data sensor:", error);
     }
 };
+
+/**
+ * Get the most recent data from the dataSensor table.
+ * @swagger
+ * /api/datasensor/:
+ *   get:
+ *     summary: Get the first data
+ *     description: Retrieves the most recent record from the dataSensor table, ordered by creation time in descending order.
+ *     responses:
+ *       '200':
+ *         description: Data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: The unique identifier of the data
+ *                 value:
+ *                   type: number
+ *                   description: The sensor value
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The time when the data was created
+ *       '404':
+ *         description: No data found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "No data found in the specified table"
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
 
 
 export const getFirstData = async (req, res) => {
@@ -54,6 +101,97 @@ export const getFirstData = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 };
+
+/**
+ * Retrieve sensor data with various filtering and sorting options.
+ * @swagger
+ * /api/datasensor/search:
+ *   get:
+ *     summary: Get sensor data with pagination, filtering, and sorting options.
+ *     description: Retrieves sensor data based on column, value, pagination, sorting column, and sorting type.
+ *     parameters:
+ *       - in: query
+ *         name: column
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The column to search in (e.g., "temperature", "humidity", "light", "all").
+ *       - in: query
+ *         name: value
+ *         schema:
+ *           type: string
+ *         description: The value to search for in the specified column. Must be absent or empty when searching for "all".
+ *       - in: query
+ *         name: page
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The page number for pagination.
+ *       - in: query
+ *         name: columnsort
+ *         schema:
+ *           type: string
+ *         description: The column to sort by (e.g., "id", "createdAt", "temperature", "humidity", "light").
+ *       - in: query
+ *         name: typesort
+ *         schema:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *         description: The sort order (ASC for ascending, DESC for descending).
+ *     responses:
+ *       '200':
+ *         description: Data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   temperature:
+ *                     type: number
+ *                   humidity:
+ *                     type: number
+ *                   light:
+ *                     type: number
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *       '400':
+ *         description: Invalid input parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "When searching for 'all', you are not allowed to enter a 'value'!"
+ *       '404':
+ *         description: No data found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "No data found with {column} equal to {value}"
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
+
 
 export const getDataSensor = async (req, res) => {
     try {
@@ -83,9 +221,6 @@ export const getDataSensor = async (req, res) => {
             where: searchAll ? {} : { [column]: valueSearch },
             skip: next,
             take: 10,
-            // orderBy: {
-            //     createdAt: 'desc'
-            // }
         });
 
         if (!data || data.length === 0) {
@@ -96,38 +231,40 @@ export const getDataSensor = async (req, res) => {
             item.createdAt = convertDateFormatToVN(item.createdAt);
         });
 
-        let avalue;
-        let bvalue;
-        data.sort((a, b) => {
-            switch (columnsort) {
-                case 'id':
-                    avalue = a.id;
-                    bvalue = b.id
-                    break;
-                case 'createdAt':
-                    avalue = a.createdAt
-                    bvalue = b.createdAt
-                    break
-                case 'temperature':
-                    avalue = a.temperature
-                    bvalue = b.temperature
-                    break
-                case 'humidity':
-                    avalue = a.humidity
-                    bvalue = b.humidity
-                    break
-                case 'light':
-                    avalue = a.light
-                    bvalue = b.light
-                    break
-                default:
-                    break
-            }
+        if (typesort) {
+            let avalue;
+            let bvalue;
+            data.sort((a, b) => {
+                switch (columnsort) {
+                    case 'id':
+                        avalue = a.id;
+                        bvalue = b.id
+                        break;
+                    case 'createdAt':
+                        avalue = a.createdAt
+                        bvalue = b.createdAt
+                        break
+                    case 'temperature':
+                        avalue = a.temperature
+                        bvalue = b.temperature
+                        break
+                    case 'humidity':
+                        avalue = a.humidity
+                        bvalue = b.humidity
+                        break
+                    case 'light':
+                        avalue = a.light
+                        bvalue = b.light
+                        break
+                    default:
+                        break
+                }
 
-            if (typesort === 'ASC')
-                return avalue - bvalue
-            return bvalue - avalue
-        })
+                if (typesort === 'ASC')
+                    return avalue - bvalue
+                return bvalue - avalue
+            })
+        }
 
         return res.status(200).json(data);
     } catch (error) {

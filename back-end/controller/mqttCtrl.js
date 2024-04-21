@@ -1,8 +1,11 @@
 import { connect } from 'mqtt';
+import dotenv from 'dotenv';
 
-const mqttClient = connect('http://localhost:1882', {
-    username: 'hhd',
-    password: 'hhd'
+dotenv.config();
+
+const mqttClient = connect(process.env.MQTT_BROKER_URL, {
+    username: process.env.MQTT_USERNAME,
+    password: process.env.MQTT_PASSWORD
 });
 
 mqttClient.on('connect', () => {

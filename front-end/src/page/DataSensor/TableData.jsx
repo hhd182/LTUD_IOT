@@ -171,8 +171,8 @@ function TableData() {
                             </div>
                         </div>
                     }
-                    dataIndex="address"
-                    key="address"
+                    dataIndex="age"
+                    key="age"
                     align='center' />
                 <Column
                     title="Time"
