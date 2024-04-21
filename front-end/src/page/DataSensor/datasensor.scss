@@ -10,6 +10,15 @@
 
 .datasensor-container {
     min-height: calc(100vh - 70px);
+
+    .icon-sort {
+        font-size: 0.7rem;
+        opacity: 0.3;
+    }
+
+    .icon-active {
+        opacity: 1;
+    }
 }
 
 .ant-tree-select-dropdown {

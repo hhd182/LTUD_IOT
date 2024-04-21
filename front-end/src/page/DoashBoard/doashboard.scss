@@ -19,3 +19,8 @@
 .recharts-legend-wrapper {
     top: -0.5rem !important;
 }
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.85;
+}

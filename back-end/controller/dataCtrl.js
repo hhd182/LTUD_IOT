@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import { convertDateFormatToVN } from '../logic/logic.js';
 
 const prisma = new PrismaClient();
-
 export const newDataSensor = async (req, res) => {
     try {
         const { temperature, humidity, light } = req.body;
@@ -19,6 +18,23 @@ export const newDataSensor = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 };
+
+export const newData = async (data) => {
+    try {
+        const dataSensor = JSON.parse(data)
+        const { temperature, humidity, light } = dataSensor
+        const result = await prisma.dataSensor.create({
+            data: {
+                temperature,
+                humidity,
+                light
+            }
+        });
+    } catch (error) {
+        console.error("Error creating new data sensor:", error);
+    }
+};
+
 
 export const getFirstData = async (req, res) => {
     try {

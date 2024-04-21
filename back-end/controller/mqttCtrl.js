@@ -1,6 +1,6 @@
 import { connect } from 'mqtt';
 
-const mqttClient = connect('mqtt://192.168.104.154:1882', {
+const mqttClient = connect('http://localhost:1882', {
     username: 'hhd',
     password: 'hhd'
 });
@@ -12,5 +12,6 @@ mqttClient.on('connect', () => {
 mqttClient.on('error', (error) => {
     console.error('MQTT error:', error);
 });
+
 
 export default mqttClient;

@@ -5,6 +5,7 @@ import Enity from './Enity';
 import ButtonComponent from './ButtonComponent';
 import ChartComponent from "./ChartComponent";
 import './doashboard.scss'
+import { newActionSensor } from '../../api/ApiAction';
 
 export default function DoashBoard(props) {
 
@@ -47,32 +48,41 @@ export default function DoashBoard(props) {
         }
     }, [data, isRender, listData, setDataSensor, time]);
 
-    const handleClickFanOn = () => {
-        if (!isFanOn) {
-            setIsFanOn(true)
-            console.log(isFanOn);
+    const handleClick = async (buttonClick, typeClick) => {
+        const value = {
+            device: buttonClick,
+            action: typeClick
         }
-    }
+        const res = await newActionSensor(value)
+        console.log(res);
+        if (res.status == 200) {
+            if (buttonClick == "fan" && typeClick == "on") {
+                if (!isFanOn) {
+                    setIsFanOn(true)
+                    console.log(isFanOn);
+                }
+            }
+            if (buttonClick == "fan" && typeClick == "off") {
+                if (isFanOn) {
+                    setIsFanOn(false)
+                    console.log(isFanOn);
+                }
+            }
 
-    const handleClickFanOff = () => {
-        if (isFanOn) {
-            setIsFanOn(false)
-            console.log(isFanOn);
+            if (buttonClick == "light" && typeClick == "on") {
+                if (!isLightOn) {
+                    setIsLightOn(true)
+                    console.log(isFanOn);
+                }
+            }
+
+            if (buttonClick == "light" && typeClick == "off") {
+                if (isLightOn) {
+                    setIsLightOn(false)
+                    console.log(isFanOn);
+                }
+            }
         }
-    }
-
-    const handleClickLightOn = () => {
-        if (!isLightOn) {
-            setIsLightOn(true)
-            console.log(isFanOn);
-        }
-    }
-
-    const handleClickLightOff = () => {
-        if (isLightOn) {
-            setIsLightOn(false)
-            console.log(isFanOn);
-        } 0
     }
 
     return (
@@ -91,10 +101,7 @@ export default function DoashBoard(props) {
                 </div>
                 <div className=' button-container w-[32%] h-96 mt-3 flex flex-col'>
                     <ButtonComponent
-                        handleClickFanOn={handleClickFanOn}
-                        handleClickFanOff={handleClickFanOff}
-                        handleClickLightOn={handleClickLightOn}
-                        handleClickLightOff={handleClickLightOff}
+                        handleClick={handleClick}
                         isFanOn={isFanOn}
                         isLightOn={isLightOn}
                     />

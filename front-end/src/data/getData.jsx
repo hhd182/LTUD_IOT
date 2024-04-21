@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
 
-
 async function getData(url) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [dataFake, setDataFake] = useState([]);

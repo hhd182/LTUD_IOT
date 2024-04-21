@@ -11,7 +11,7 @@ function DotPage() {
 
     return (
         <div className='flex w-full items-center justify-center mt-4'>
-            <Pagination current={current} onChange={onChange} total={50} />
+            <Pagination current={current} onChange={onChange} total={10} />
         </div>
     )
 }
