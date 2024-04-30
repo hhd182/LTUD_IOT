@@ -9,8 +9,7 @@
 3. [Frontend](#frontend)
     - [Installation](#installation-1)
     - [Running](#running-1)
-4. [Hardware](#hardware)
-5. [API DOCS](#api-docs)
+4. [API DOCS](#api-docs)
 ### Clone
 
 ```bash
@@ -46,6 +45,7 @@ MQTT_PORT = 'your port broker connect'
 $ npm start
 ```
 Terminal
+
 ![image](https://github.com/hhd182/LTUD_IOT/assets/82596802/6a6e53ad-983e-49cb-b594-cac56e31eeeb)
 
 ---
