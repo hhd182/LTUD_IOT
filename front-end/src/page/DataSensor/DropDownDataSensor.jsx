@@ -32,7 +32,7 @@ const DropDownDataSensor = (props) => {
         <>
             <TreeSelect
                 style={{
-                    width: '10%',
+                    width: '15%',
                     textAlign: 'center'
                 }}
                 value={value}

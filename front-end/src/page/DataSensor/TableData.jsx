@@ -44,7 +44,6 @@ function TableData(props) {
         setTypeSort(newSortState[column])
         setColumnSort(column)
         setSortState(newSortState); // Cập nhật trạng thái mới
-        handleSearch()
     }
 
     return (

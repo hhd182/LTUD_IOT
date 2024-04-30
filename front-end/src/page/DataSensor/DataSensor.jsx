@@ -62,15 +62,24 @@ function DataSensor(props) {
         }
     }, [columnSearch])
 
-    const handleSearch = () => {
+    const handleSearch = (type = "all") => {
         fetchData(value_1)
-        setPageSelect(1)
+        if (type === "all") {
+            setPageSelect(1)
+        }
     }
+
+    useEffect(() => {
+        fetchData(value_2);
+    }, [columnSearch, typeSort])
 
     return (
         <>
             {(isLoading) ? <LoadingData /> : (
-                <div className={`main pt-10 transition-all duration-300 ${(!collapsed) ? "sidebar-open" : ""}`}>
+                <div className={`main top-2 transition-all duration-300 ${(!collapsed) ? "sidebar-open" : ""}`}>
+                    <div className='mx-auto w-full px-8 py-3 font-semibold text-xl text-[#333]'>
+                        <p>DATA SENSOR</p>
+                    </div>
                     <ButtonDataSenSor
                         setColumnSeacrch={setColumnSeacrch}
                         setValueSearch={setValueSearch}
