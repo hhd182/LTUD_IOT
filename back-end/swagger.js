@@ -7,7 +7,7 @@ const options = {
         info: {
             title: 'API Documentation',
             version: '1.0.0',
-            description: 'API documentation for your Express app',
+            description: 'API documentation for IOT project',
         },
         servers: [
             {

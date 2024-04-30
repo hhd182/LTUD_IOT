@@ -8,8 +8,15 @@
     }
 }
 
-.datasensor-container {
-    min-height: calc(100vh - 70px);
+.main {
+    width: calc(100vw - 80px);
+    position: fixed;
+    right: 0;
+    height: 100vh;
+}
+
+.sidebar-open {
+    width: calc(100vw - 230px)
 }
 
 .ant-tree-select-dropdown {

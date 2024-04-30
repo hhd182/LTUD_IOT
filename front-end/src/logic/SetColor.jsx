@@ -1,4 +1,3 @@
-
 function setColorTemp(data) {
     let colorRed;
     if (data > 100) {

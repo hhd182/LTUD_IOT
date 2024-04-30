@@ -5,21 +5,26 @@ import { DatePicker } from 'antd';
 import { useState } from 'react';
 dayjs.extend(customParseFormat);
 
-function ButtonActionHistory() {
+function ButtonActionHistory(props) {
+    const { setDate, setDateTo, handleSearch } = props
     const dateFormat = 'DD/MM/YYYY'
     const customFormat = (value) => ` ${value.format(dateFormat)}`
     const currentDate = dayjs();
     const previousDate = currentDate.subtract(1, 'day');
 
-    const [datePre, setDatePre] = useState(previousDate.format(dateFormat))
-    const [dateBack, setDateBack] = useState(currentDate.format(dateFormat))
+    const [datePre, setDatePre] = useState(null)
+    const [dateBack, setDateBack] = useState(null)
 
     const handleClickPre = (value) => {
-        setDatePre(value.format(dateFormat))
+        const date = value.format(dateFormat)
+        setDatePre(date)
+        setDate(date)
     }
 
     const handleClickBack = (value) => {
-        setDateBack(value.format(dateFormat))
+        const date = value.format(dateFormat)
+        setDateBack(date)
+        setDateTo(date)
     }
 
     const handleClickSearch = () => {
@@ -52,7 +57,7 @@ function ButtonActionHistory() {
                 </div>
 
                 <button className='flex items-center justify-center rounded-md w-10 hover:bg-gray-100 h-8'
-                    onClick={handleClickSearch}
+                    onClick={() => handleClickSearch()}
                 >
                     <SearchOutlined />
                 </button>

@@ -1,3 +1,14 @@
+.main {
+    width: calc(100vw - 80px);
+    height: 100vh;
+    position: fixed;
+    right: 0;
+}
+
+.sidebar-open {
+    width: calc(100vw - 230px)
+}
+
 .temp {
     background-image: linear-gradient(to top right, #f7e9e9, #ff0000);
 }

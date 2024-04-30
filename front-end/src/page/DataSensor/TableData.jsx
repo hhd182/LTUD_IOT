@@ -3,184 +3,118 @@ import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 const { Column } = Table;
 
-const data = [
-    {
-        key: '1',
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        firstName: 'Jim',
-        lastName: 'Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '4',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '5',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '6',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '7',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '8',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '9',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '10',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-];
+function TableData(props) {
+    const { listData, setTypeSort, setColumnSort, handleSearch } = props
 
-function TableData() {
-    const [iconTempActive, setIconTempActive] = useState(0)
-    const [iconHumActive, setIconHumActive] = useState(0)
-    const [iconLightActive, setIconLightActive] = useState(0)
+    const statusSort = {
+        notSort: "",
+        asc: "ASC",
+        desc: "DESC",
+    }
 
-    function handleClick(column) {
-        if (column === "temperature") {
-            if (iconTempActive === 2) {
-                setIconTempActive(0)
-            } else {
-                setIconTempActive(iconTempActive + 1)
+    const [sortState, setSortState] = useState({
+        temperature: statusSort.notSort,
+        humidity: statusSort.notSort,
+        light: statusSort.notSort,
+    });
+
+    function handleSortClick(column) {
+        column = column.toLowerCase()
+        setColumnSort(column)
+        const newSortState = { ...sortState };
+
+        Object.keys(newSortState).forEach(key => {
+            if (newSortState[key] != column) {
+                newSortState[key] = statusSort.notSort;
             }
-        } else if (column === "humidity") {
-            if (iconHumActive === 2) {
-                setIconHumActive(0)
-            } else {
-                setIconHumActive(iconHumActive + 1)
-            }
-        } else {
-            if (iconLightActive === 2) {
-                setIconLightActive(0)
-            } else {
-                setIconLightActive(iconLightActive + 1)
-            }
+        });
+
+        switch (sortState[column]) {
+            case statusSort.asc:
+                newSortState[column] = statusSort.desc;
+                break;
+            case statusSort.desc:
+                newSortState[column] = statusSort.notSort;
+                break;
+            default:
+                newSortState[column] = statusSort.asc;
+                break;
         }
+
+        setTypeSort(newSortState[column])
+        setColumnSort(column)
+        setSortState(newSortState); // Cập nhật trạng thái mới
+        handleSearch()
     }
 
     return (
         <div className='w-[90%] mx-auto bg-white items-center shadow-sm mt-5 rounded-2xl'>
-            <Table dataSource={data} pagination={false} bordered={true} size='small' >
-                <Column title="Index" dataIndex="key" key="firstName" align='center' />
+            <Table dataSource={listData} pagination={false} bordered={true} size='small' >
+                <Column title="Index" dataIndex="id" key="id" align='center' />
                 <Column
                     title={
                         <div
                             className='flex justify-center cursor-pointer select-none '
-                            onClick={() => handleClick("temperature")}>
+                            onClick={(e) => handleSortClick(e.target.innerText)}>
                             <span>
                                 Temperature
                             </span>
                             <div className=' absolute right-0 pr-4 '>
                                 <div className=' flex flex-col '>
-                                    <CaretUpOutlined className={`icon-sort ${iconTempActive == 1 ? "icon-active" : ""}`} />
-                                    <CaretDownOutlined className={`icon-sort ${iconTempActive == 2 ? "icon-active" : ""}`} />
+                                    <CaretUpOutlined className={`icon-sort ${sortState.temperature == statusSort.asc ? "icon-active" : ""}`} />
+                                    <CaretDownOutlined className={`icon-sort ${sortState.temperature == statusSort.desc ? "icon-active" : ""}`} />
                                 </div>
                             </div>
                         </div>
                     }
-                    dataIndex="age"
-                    key="age"
+                    dataIndex="temperature"
+                    key="temperature"
                     align='center' />
                 <Column
                     title={
                         <div
                             className='flex justify-center cursor-pointer select-none '
-                            onClick={() => handleClick("humidity")}>
+                            onClick={(e) => handleSortClick(e.target.innerText)}>
                             <span>
                                 Humidity
                             </span>
                             <div className=' absolute right-0 pr-4 '>
                                 <div className=' flex flex-col '>
-                                    <CaretUpOutlined className={`icon-sort ${iconHumActive == 1 ? "icon-active" : ""}`} />
-                                    <CaretDownOutlined className={`icon-sort ${iconHumActive == 2 ? "icon-active" : ""}`} />
+                                    <CaretUpOutlined className={`icon-sort ${sortState.humidity == statusSort.asc ? "icon-active" : ""}`} />
+                                    <CaretDownOutlined className={`icon-sort ${sortState.humidity == statusSort.desc ? "icon-active" : ""}`} />
                                 </div>
                             </div>
                         </div>
                     }
-                    dataIndex="age"
-                    key="age"
+                    dataIndex="humidity"
+                    key="humidity"
                     align='center' />
                 <Column
                     title={
                         <div
                             className='flex justify-center cursor-pointer select-none '
-                            onClick={() => handleClick("light")}>
+                            onClick={(e) => handleSortClick(e.target.innerText)}>
                             <span>
                                 Light
                             </span>
                             <div className=' absolute right-0 pr-4 '>
                                 <div className=' flex flex-col '>
-                                    <CaretUpOutlined className={`icon-sort ${iconLightActive == 1 ? "icon-active" : ""}`} />
-                                    <CaretDownOutlined className={`icon-sort ${iconLightActive == 2 ? "icon-active" : ""}`} />
+                                    <CaretUpOutlined className={`icon-sort ${sortState.light == statusSort.asc ? "icon-active" : ""}`} />
+                                    <CaretDownOutlined className={`icon-sort ${sortState.light == statusSort.desc ? "icon-active" : ""}`} />
                                 </div>
                             </div>
                         </div>
                     }
-                    dataIndex="age"
-                    key="age"
+                    dataIndex="light"
+                    key="light"
                     align='center' />
                 <Column
                     title="Time"
-                    dataIndex="address"
-                    key="address"
+                    dataIndex="createdAt"
+                    key="createdAt"
                     align='center' />
-            </Table>
-        </div>
+            </Table >
+        </div >
     )
 }
 export default TableData;

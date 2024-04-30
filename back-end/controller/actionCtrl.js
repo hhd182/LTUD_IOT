@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { convertDateFormat } from '../logic/logic.js';
+import { convertDateFormat, convertDateFormatToVN } from '../logic/logic.js';
 import mqttClient from './mqttCtrl.js';
 
 const prisma = new PrismaClient();
@@ -69,50 +69,59 @@ const prisma = new PrismaClient();
  */
 
 
+
 export const newAction = (req, res) => {
-    const { device, action } = req.body;
-    let result, topicPub, topicSub, message;
+    try {
+        const { device, action } = req.body;
+        let result, topicPub, topicSub, message;
 
-    if (device === 'light' || device === 'fan') {
-        topicPub = `${device}control`;
-        topicSub = `${device}status`;
-        message = action.toUpperCase();
+        if (device === 'light' || device === 'fan') {
+            topicPub = `${device}control`;
+            topicSub = `${device}status`;
+            message = action.toUpperCase();
 
-        // Hàm xử lý tin nhắn từ MQTT
-        const handleMessage = async (receivedTopic, receivedMessage) => {
-            if (receivedTopic === topicSub) {
-                const status = receivedMessage.toString();
-                if (status === 'ON' || status === 'OFF') {
-                    result = await prisma.actionHistory.create({
-                        data: {
-                            device,
-                            action,
-                        }
-                    });
+            // Hàm xử lý tin nhắn từ MQTT
+            const handleMessage = async (receivedTopic, receivedMessage) => {
+                if (receivedTopic === topicSub) {
+                    const status = receivedMessage.toString();
+                    if (status === 'ON' || status === 'OFF') {
+                        result = await prisma.actionHistory.create({
+                            data: {
+                                device,
+                                action,
+                            }
+                        });
 
-                    // Hủy đăng ký lắng nghe cho MQTT topic và gửi phản hồi HTTP
-                    mqttClient.unsubscribe(topicSub);
-                    mqttClient.off('message', handleMessage);
+                        // Hủy đăng ký lắng nghe cho MQTT topic và gửi phản hồi HTTP
+                        mqttClient.unsubscribe(topicSub);
+                        mqttClient.off('message', handleMessage);
 
-                    res.status(200).json({
-                        message: 'Action completed successfully',
-                        data: result,
-                    });
+                        res.status(200).json({
+                            message: 'Action completed successfully',
+                            data: result,
+                        });
 
-                    return; // Dừng hàm sau khi đã gửi phản hồi HTTP
+                        return; // Dừng hàm sau khi đã gửi phản hồi HTTP
+                    }
                 }
-            }
-        };
+            };
 
-        // Gắn sự kiện message
-        mqttClient.on('message', handleMessage);
+            // Gắn sự kiện message
+            mqttClient.on('message', handleMessage);
 
-        // Gửi tin nhắn điều khiển
-        mqttClient.subscribe(topicSub);
-        mqttClient.publish(topicPub, message);
-    } else {
-        res.status(400).json({
-            error: 'Invalid device or action type',
+            // Gửi tin nhắn điều khiển
+            mqttClient.subscribe(topicSub);
+            mqttClient.publish(topicPub, message);
+        } else {
+            res.status(400).json({
+                error: 'Invalid device or action type',
+            });
+        }
+    } catch (error) {
+        console.error("An error occurred:", error);
+        res.status(500).json({
+            error: "Internal server error",
+            message: error.message,
         });
     }
 };
@@ -196,47 +205,51 @@ export const newAction = (req, res) => {
  *                   type: string
  *                   example: "Internal server error"
  */
-
 export const getDataAction = async (req, res) => {
     try {
         const { dayStart, dayEnd, page } = req.query;
-        if (dayStart && dayEnd && page) {
-            let isSearch = false
-            let startDay, endDay;
 
-            const pageNumber = parseInt(page, 10);
-            if (isNaN(pageNumber) || pageNumber < 1) {
-                return res.status(400).json({ error: "Invalid 'page' parameter" });
-            }
-            const next = (pageNumber - 1) * 10;
-            if (dayStart && dayEnd) {
-                isSearch = true;
-                startDay = convertDateFormat(dayStart)
-                endDay = convertDateFormat(dayEnd)
-            }
-
-            const valueSearch = { createdAt: { gte: new Date(startDay), lte: new Date(endDay) } }
-
-            const data = await prisma.actionHistory.findMany({
-                where: isSearch ? valueSearch : {},
-                skip: next,
-                take: 10,
-                orderBy: {
-                    createdAt: 'desc'
-                }
-            });
-
-            if (!data || data.length === 0) {
-                return res.status(404).json({ error: `No data from ${dayStart} to ${dayEnd}` });
-            }
-
-            return res.status(200).json(data);
+        const pageNumber = parseInt(page, 10);
+        if (isNaN(pageNumber) || pageNumber < 1) {
+            return res.status(400).json({ error: "Invalid 'page' parameter" });
         }
-        else {
-            return res.status(400).json({
-                error: "Required query parameters 'dayStart', 'dayEnd', and 'page' must be provided.",
+
+        const next = (pageNumber - 1) * 10;
+
+        let valueSearch = {};
+        if (dayStart && dayEnd) {
+            const startDay = convertDateFormat(dayStart);
+            const endDay = convertDateFormat(dayEnd);
+
+            valueSearch = {
+                createdAt: { gte: new Date(startDay), lte: new Date(endDay) }
+            };
+        }
+
+        const totalCount = await prisma.actionHistory.count({
+            where: valueSearch,
+        });
+
+        const data = await prisma.actionHistory.findMany({
+            where: valueSearch,
+            skip: next,
+            take: 10,
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+
+        if (!data || data.length === 0) {
+            return res.status(404).json({
+                error: `No data found${dayStart && dayEnd ? ` from ${dayStart} to ${dayEnd}` : ''}`,
             });
         }
+
+        data.forEach(item => {
+            item.createdAt = convertDateFormatToVN("year", item.createdAt);
+        });
+
+        return res.status(200).json({ data, totalCount });
     } catch (error) {
         console.error("Error searching data in actionHistory:", error);
         return res.status(500).json({ error: "Internal server error" });

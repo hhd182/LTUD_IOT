@@ -1,9 +1,8 @@
 import axios from "axios";
 
 const path = {
-    getData: "",
     newActionSensor: "http://localhost:3333/api/action/new",
-
+    getListAction: "http://localhost:3333/api/action/search"
 }
 
 async function newActionSensor(value) {
@@ -16,4 +15,15 @@ async function newActionSensor(value) {
     }
 }
 
-export { newActionSensor }
+async function getListAction(value) {
+    try {
+        const res = await axios.get(path.getListAction, { params: value });
+        // console.log(res.data);
+        return res.data;
+    } catch (error) {
+        console.log("Error: ", error.message);
+        return null;
+    }
+}
+
+export { newActionSensor, getListAction }

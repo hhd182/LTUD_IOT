@@ -1,17 +1,26 @@
 import { Pagination } from 'antd';
-import { useState } from 'react';
 
-function DotPage() {
-    const [current, setCurrent] = useState(1);
+function DotPage(props) {
+    const { setPageSelect, total, pageSelect } = props
 
     const onChange = (page) => {
-        console.log(page);
-        setCurrent(page);
+        setPageSelect(prevPage => {
+            if (prevPage !== page) {
+                return page;
+            }
+        })
     };
 
     return (
-        <div className='flex w-full items-center justify-center mt-4'>
-            <Pagination current={current} onChange={onChange} total={10} />
+        <div key={pageSelect} className='flex w-full items-center justify-center mt-4'>
+            {/* <Pagination current={current} onChange={onChange} total={10} /> */}
+
+            <Pagination
+                showSizeChanger={false}
+                onChange={onChange}
+                defaultCurrent={pageSelect}
+                total={total}
+            />
         </div>
     )
 }

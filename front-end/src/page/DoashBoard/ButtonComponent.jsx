@@ -9,7 +9,7 @@ function ButtonComponent(props) {
 
     return (
         <>
-            <div className='flex justify-center items-center shadow-sm flex-col rounded-2xl h-44 gap-y-3 bg-[#909090]' >
+            <div className='flex justify-center items-center shadow-sm flex-col rounded-2xl h-44 gap-y-3 bg-[#eeeeee]' >
                 <img className='transition-all' width={100} src={isFanOn ? fanOn : fanOff} alt="" />
                 <div className="flex">
                     <button
@@ -29,7 +29,7 @@ function ButtonComponent(props) {
                 </div>
             </div >
 
-            <div className='flex justify-center items-center shadow-sm flex-col rounded-2xl h-44 gap-y-3 bg-[#909090] mt-10' >
+            <div className='flex justify-center items-center shadow-sm flex-col rounded-2xl h-44 gap-y-3 bg-[#eeeeee] mt-10' >
                 <img className='transition-all' width={100} src={isLightOn ? lightOn : lightOff} alt="" />
                 <div className="flex">
                     <button

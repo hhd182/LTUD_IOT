@@ -5,8 +5,8 @@ import { setColorTemp, setColorHum, setColorLight } from "../../logic/SetColor";
 
 function Enity(props) {
     const { data } = props;
-    let colorTemp = setColorTemp(data.temp)
-    let colorHum = setColorHum(data.hum)
+    let colorTemp = setColorTemp(data.temperature)
+    let colorHum = setColorHum(data.humidity)
     let colorLight = setColorLight(data.light)
 
     return (
@@ -15,8 +15,8 @@ function Enity(props) {
                 style={{ backgroundImage: `linear-gradient(to top right, #f7e9e9, ${colorTemp})` }}>
                 <FaTemperatureLow className='text-red-600 text-6xl' />
                 <p className="title mr-5 text-2xl text-[#333] font-bold">
-                    <span>{data.temp}</span>
-                    <span>℃</span>
+                    <span>{data.temperature}</span>
+                    <span> ℃</span>
                 </p>
             </div >
 
@@ -24,8 +24,8 @@ function Enity(props) {
                 style={{ backgroundImage: `linear-gradient(to top right, #d6d5fd, ${colorHum})` }}>
                 <FaDroplet className='text-blue-900 text-6xl' />
                 <p className="title mr-5 text-2xl text-[#333] font-bold">
-                    <span>{data.hum}</span>
-                    <span>%</span>
+                    <span>{data.humidity}</span>
+                    <span> %</span>
                 </p>
             </div>
 
@@ -34,7 +34,7 @@ function Enity(props) {
                 <FaRegLightbulb className='text-yellow-600 text-6xl' />
                 <p className="title mr-5 text-2xl text-[#333] font-bold">
                     <span>{data.light}</span>
-                    <span>℃</span>
+                    <span> Lx</span>
                 </p>
             </div>
         </>

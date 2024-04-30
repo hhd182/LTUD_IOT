@@ -25,16 +25,16 @@ app.use('/api/action', actionRoutes)
 
 //get datasensor
 mqttClient.on('connect', () => {
-    mqttClient.subscribe('datasensor');
+    mqttClient.subscribe(['datasensor']);
 });
 mqttClient.on("message", (topic, message) => {
-    // if (topic == "datasensor") {
-    //     const data = message.toString();
-    //     console.log(data);
-    //     newData(data)
-    // }
-    const data = message.toString();
-    console.log(data);
+    if (topic == "datasensor") {
+        const data = message.toString();
+        console.log(data);
+        newData(data)
+    }
+    // const data = message.toString();
+    // console.log(data);
 });
 
 app.listen(port, () => {

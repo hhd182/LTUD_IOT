@@ -1,15 +1,33 @@
 import axios from "axios";
 
 const path = {
-    getData: "",
+    getData: "http://localhost:3333/api/datasensor/",
     getListData: "http://localhost:3333/api/datasensor/search",
 
+}
+
+async function getData() {
+    try {
+        const res = await axios.get(path.getData)
+        const { temperature, humidity, light, createdAt } = res.data
+        const myData = {
+            "temperature": temperature,
+            "humidity": humidity,
+            "light": light,
+            "time": createdAt
+        }
+        // console.log(mydata);
+        return myData;
+    } catch (error) {
+        console.log("Error: ", error.message);
+        return null;
+    }
 }
 
 async function getListData(value) {
     try {
         const res = await axios.get(path.getListData, { params: value });
-        console.log(res.data);
+        // console.log(res.data);
         return res.data;
     } catch (error) {
         console.log("Error: ", error.message);
@@ -18,12 +36,12 @@ async function getListData(value) {
 }
 
 
-async function searchData(value) {
-    try {
-        let data = await axios.get(URL_SEARCH, value)
-    } catch (e) {
-        console.log("Error: ", e.message);
-    }
-}
+// async function searchData(value) {
+//     try {
+//         let data = await axios.get(URL_SEARCH, value)
+//     } catch (e) {
+//         console.log("Error: ", e.message);
+//     }
+// }
 
-export { getListData, searchData }
+export { getData, getListData }

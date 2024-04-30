@@ -1,8 +1,8 @@
 import { TreeSelect } from 'antd';
-import { useState } from 'react';
+import { memo } from 'react';
 
 const DropDownDataSensor = (props) => {
-    const { value, setValue } = props
+    const { value, setValue, setColumnSeacrch } = props
 
     let treeData = [
         {
@@ -25,6 +25,7 @@ const DropDownDataSensor = (props) => {
 
     const onChange = (newValue) => {
         setValue(newValue);
+        setColumnSeacrch(newValue)
     }
 
     return (
@@ -47,4 +48,4 @@ const DropDownDataSensor = (props) => {
         </>
     );
 };
-export default DropDownDataSensor;
+export default memo(DropDownDataSensor);
