@@ -4,72 +4,6 @@ import mqttClient from './mqttCtrl.js';
 
 const prisma = new PrismaClient();
 
-/**
- * Control a device based on the provided action.
- * @swagger
- * /api/action/new:
- *   post:
- *     summary: Control a device (light or fan).
- *     description: Sends a command to control a specific device (light or fan), action (on or off) and returns the status of the action.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               device:
- *                 type: string
- *                 description: The device to control (light or fan).
- *               action:
- *                 type: string
- *                 description: The action to perform (ON or OFF).
- *             required:
- *               - device
- *               - action
- *     responses:
- *       '200':
- *         description: Action completed successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Success message
- *                 data:
- *                   type: object
- *                   description: The created action history record
- *                   properties:
- *                     device:
- *                       type: string
- *                     action:
- *                       type: string
- *       '400':
- *         description: Invalid device type or other validation error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: 'Invalid device type'
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: 'Internal server error'
- */
-
-
-
 export const newAction = (req, res) => {
     try {
         const { device, action } = req.body;
@@ -84,10 +18,11 @@ export const newAction = (req, res) => {
             const handleMessage = async (receivedTopic, receivedMessage) => {
                 if (receivedTopic === topicSub) {
                     const status = receivedMessage.toString();
+                    const deviceName = device.toUpperCase()
                     if (status === 'ON' || status === 'OFF') {
                         result = await prisma.actionHistory.create({
                             data: {
-                                device,
+                                device: deviceName,
                                 action,
                             }
                         });
@@ -126,95 +61,17 @@ export const newAction = (req, res) => {
     }
 };
 
-
-/**
- * Get action history within a specified date range.
- * @swagger
- * /api/action/history:
- *   get:
- *     summary: Retrieve action history within a date range
- *     description: Retrieves records from the action history table within the specified date range, with optional pagination.
- *     parameters:
- *       - in: query
- *         name: dayStart
- *         required: false
- *         schema:
- *           type: string
- *           format: date
- *         description: Start date for the range (YYYY-MM-DD)
- *       - in: query
- *         name: dayEnd
- *         required: false
- *         schema:
- *           type: string
- *           format: date
- *         description: End date for the range (YYYY-MM-DD)
- *       - in: query
- *         name: page
- *         required: false
- *         schema:
- *           type: integer
- *         description: Page number for pagination (defaults to 1)
- *     responses:
- *       '200':
- *         description: Data retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                   device:
- *                     type: string
- *                   action:
- *                     type: string
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *       '400':
- *         description: Invalid query parameters
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Invalid 'page' parameter"
- *       '404':
- *         description: No data found within the specified date range
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "No data from {dayStart} to {dayEnd}"
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Internal server error"
- */
 export const getDataAction = async (req, res) => {
     try {
-        const { dayStart, dayEnd, page } = req.query;
+        const { dayStart, dayEnd, page, limit } = req.query;
 
         const pageNumber = parseInt(page, 10);
         if (isNaN(pageNumber) || pageNumber < 1) {
             return res.status(400).json({ error: "Invalid 'page' parameter" });
         }
 
-        const next = (pageNumber - 1) * 10;
+        const limitNumber = parseInt(limit, 10)
+        const next = (pageNumber - 1) * limitNumber;
 
         let valueSearch = {};
         if (dayStart && dayEnd) {
@@ -233,7 +90,7 @@ export const getDataAction = async (req, res) => {
         const data = await prisma.actionHistory.findMany({
             where: valueSearch,
             skip: next,
-            take: 10,
+            take: limitNumber,
             orderBy: {
                 createdAt: 'desc'
             }
@@ -255,3 +112,29 @@ export const getDataAction = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 };
+
+export const getFirstAction = async (req, res) => {
+    try {
+        const data = await prisma.actionHistory.findMany({
+            distinct: ['device'], // Lấy các bản ghi không trùng lặp theo thuộc tính 'action'
+            orderBy: {
+                createdAt: 'desc', // Sắp xếp theo thời gian mới nhất
+            },
+            take: 2, // Lấy hai bản ghi đầu tiên
+        });
+
+        if (!data || data.length < 2) {
+            return res.status(404).json({ error: "Not enough unique data found" });
+        }
+
+        data.forEach((item) => {
+            item.createdAt = convertDateFormatToVN("time", item.createdAt);
+        });
+
+        return res.status(200).json(data);
+    } catch (error) {
+        console.error("Error retrieving data:", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+

@@ -33,12 +33,12 @@ function ButtonActionHistory(props) {
 
     return (
         <>
-            <div className=' w-[90%] mx-auto flex gap-x-2 bg-white rounded-lg min-h-16 items-center pl-6 shadow-sm'>
+            <div className=' w-[90%] mx-auto flex gap-x-2 bg-white border rounded-lg min-h-16 items-center pl-6 shadow-sm'>
                 <div className='flex gap-x-7'>
                     <div className='flex text-center justify-center items-center gap-x-1'>
                         <p>Start: </p>
                         <DatePicker
-                            defaultValue={dayjs(previousDate, dateFormat)}
+                            // defaultValue={dayjs(previousDate, dateFormat)}
                             format={customFormat}
                             style={{ width: 130 }}
                             onChange={handleClickPre}
@@ -48,7 +48,7 @@ function ButtonActionHistory(props) {
                     <div className='flex text-center justify-center items-center gap-x-1'>
                         <p>End: </p>
                         <DatePicker
-                            defaultValue={dayjs(currentDate, dateFormat)}
+                            // defaultValue={dayjs(currentDate, dateFormat)}
                             format={customFormat}
                             style={{ width: 130 }}
                             onChange={handleClickBack}
@@ -57,7 +57,7 @@ function ButtonActionHistory(props) {
                 </div>
 
                 <button className='flex items-center justify-center rounded-md w-10 hover:bg-gray-100 h-8'
-                    onClick={() => handleClickSearch()}
+                    onClick={() => handleSearch()}
                 >
                     <SearchOutlined />
                 </button>

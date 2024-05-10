@@ -28,9 +28,8 @@ async function getListData(value) {
     try {
         const res = await axios.get(path.getListData, { params: value });
         // console.log(res.data);
-        return res.data;
+        return res;
     } catch (error) {
-        console.log("Error: ", error.message);
         return null;
     }
 }

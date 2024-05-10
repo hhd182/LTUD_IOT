@@ -1,0 +1,54 @@
+/* CSS cho phần tổng quan home */
+.profile {
+    width: calc(100vw - 80px);
+    height: 100vh;
+    background-image: url(../../assets/img/back.jpg);
+    background-size: cover;
+    background-position: center;
+    position: fixed;
+    right: 0;
+}
+
+.sidebar-open {
+    width: calc(100vw - 230px)
+}
+
+.home {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-content {
+    max-width: 500px;
+    padding: 40px;
+    background-color: #e6e6e6;
+    border-radius: 20px;
+    text-align: justify;
+    color: #333;
+}
+
+.home-img img {
+    border-radius: 360px;
+    width: 500px;
+    height: 500px;
+    margin-right: 50px;
+}
+
+.contact {
+    display: flex;
+    align-items: center;
+    color: #333;
+}
+
+.contact p {
+    margin-right: 10px;
+}
+
+/* CSS cho biểu tượng liên hệ */
+.contact a i {
+    font-size: 20px;
+    color: #333;
+}

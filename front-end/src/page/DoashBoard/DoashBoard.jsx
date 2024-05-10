@@ -7,9 +7,10 @@ import LoadingData from '../LoadingData/LoadingData';
 import './doashboard.scss'
 import { newActionSensor } from '../../api/ApiAction';
 import { getData } from '../../api/ApiData';
+import { getFirstAction } from '../../api/ApiAction';
 
 export default function DoashBoard(props) {
-    const { isLoading, setIsLoading, collapsed } = props
+    const { isLoading, setIsLoading, collapsed, isActionFan, setIsActionFan, isActionLight, setIsActionLight } = props
     const [data, setData] = useState({})
     const [listData, setListData] = useState([[]])
 
@@ -29,10 +30,33 @@ export default function DoashBoard(props) {
         setIsLoading(false);
     };
 
+    const fetchDataAction = async (req) => {
+        try {
+            const res = await getFirstAction(req);
+            console.log(res);
+            if (res) {
+                const value = res[0].device
+                if (value == "FAN") {
+                    setIsFanOn((res[0].action == "on") ? true : false)
+                    setIsLightOn((res[1].action == "on") ? true : false)
+                } else {
+                    setIsLightOn((res[0].action == "on") ? true : false)
+                    setIsFanOn((res[1].action == "on") ? true : false)
+                }
+            }
+
+        } catch (error) {
+            console.error("Error fetching list data:", error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchDataAction()
+    }, [])
+
     useEffect(() => {
         // Tải dữ liệu ngay khi component được render
         fetchData();
-
         const intervalId = setInterval(fetchData, 5000); // Thiết lập tự động tải lại sau mỗi 5 giây
 
         return () => clearInterval(intervalId); // Hủy interval khi component unmount
@@ -44,33 +68,40 @@ export default function DoashBoard(props) {
             device: buttonClick,
             action: typeClick
         }
+
+        if (buttonClick == "light") {
+            setIsActionLight(true)
+        } else {
+            setIsActionFan(true)
+        }
+
         const res = await newActionSensor(value)
-        console.log(res);
         if (res.status == 200) {
+            fetchDataAction()
             if (buttonClick == "fan" && typeClick == "on") {
                 if (!isFanOn) {
                     setIsFanOn(true)
-                    console.log(isFanOn);
+                    setIsActionFan(false)
                 }
             }
             if (buttonClick == "fan" && typeClick == "off") {
                 if (isFanOn) {
                     setIsFanOn(false)
-                    console.log(isFanOn);
+                    setIsActionFan(false)
                 }
             }
 
             if (buttonClick == "light" && typeClick == "on") {
                 if (!isLightOn) {
                     setIsLightOn(true)
-                    console.log(isFanOn);
+                    setIsActionLight(false)
                 }
             }
 
             if (buttonClick == "light" && typeClick == "off") {
                 if (isLightOn) {
+                    setIsActionLight(false)
                     setIsLightOn(false)
-                    console.log(isFanOn);
                 }
             }
         }
@@ -78,7 +109,7 @@ export default function DoashBoard(props) {
 
     return (
         <>
-            {(isLoading) ? <LoadingData /> : (<div className={`main transition-all duration-300 top-2 ${(!collapsed) ? "sidebar-open" : ""}`}>
+            {(isLoading) ? <LoadingData collapsed={collapsed} /> : (<div className={`main transition-all duration-300 top-2 ${(!collapsed) ? "sidebar-open" : ""}`}>
                 <div className='mx-auto w-full px-8 py-3 font-semibold text-xl text-[#333]'>
                     <p>DOASH BOARD</p>
                 </div>
@@ -94,6 +125,8 @@ export default function DoashBoard(props) {
                             handleClick={handleClick}
                             isFanOn={isFanOn}
                             isLightOn={isLightOn}
+                            isActionFan={isActionFan}
+                            isActionLight={isActionLight}
                         />
                     </div>
                 </div>

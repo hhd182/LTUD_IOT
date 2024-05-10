@@ -3,6 +3,7 @@ import ButtonDataSenSor from "./ButtonDataSensor";
 import TableData from "./TableData";
 import DotPage from "./DotPage";
 import LoadingData from "../LoadingData/LoadingData";
+import NoData from "../NoData/NoData";
 import './datasensor.scss'
 import { useEffect, useState } from "react";
 import { getListData } from "../../api/ApiData";
@@ -17,21 +18,14 @@ function DataSensor(props) {
     const [isSearchAll, setIsSearchAll] = useState(true)
     const [total, setTotal] = useState(10)
     const [listData, setListData] = useState([])
+    const [pageSize, setPageSize] = useState(10)
+    const [isNoValue, setIsNoValue] = useState(false)
 
-    const value_1 = {
-        column: columnSearch,
-        value: valueSearch,
-        page: 1,
-        limit: 10,
-        columnsort: columnSort,
-        typesort: typeSort
-    }
-
-    const value_2 = {
+    const value = {
         column: columnSearch,
         value: valueSearch,
         page: pageSelect,
-        limit: 10,
+        limit: pageSize ?? 10,
         columnsort: columnSort,
         typesort: typeSort
     }
@@ -39,20 +33,22 @@ function DataSensor(props) {
     const fetchData = async (req) => {
         try {
             const data = await getListData(req);
-            if (data) {
-                setListData(data.listData);
-                setTotal(data.totalCount)
+            if (data.status == 200) {
+                setListData(data.data.listData);
+                setTotal(data.data.totalCount)
                 setIsLoading(false)
+                setIsNoValue(false)
                 // console.log(data);
             }
         } catch (error) {
-            console.error("Error fetching list data:", error.message);
+            setIsNoValue(true)
+            console.error("Error fetching list data:", error.message, isNoValue);
         }
     };
 
     useEffect(() => {
-        fetchData(value_2);
-    }, [pageSelect]);
+        fetchData(value);
+    }, [pageSelect, pageSize, columnSearch, typeSort]);
 
     useEffect(() => {
         if (columnSearch == 'all') {
@@ -62,21 +58,16 @@ function DataSensor(props) {
         }
     }, [columnSearch])
 
-    const handleSearch = (type = "all") => {
-        fetchData(value_1)
-        if (type === "all") {
-            setPageSelect(1)
-        }
+    const handleSearch = () => {
+        setPageSize(10)
+        setPageSelect(1)
+        fetchData(value)
     }
-
-    useEffect(() => {
-        fetchData(value_2);
-    }, [columnSearch, typeSort])
 
     return (
         <>
-            {(isLoading) ? <LoadingData /> : (
-                <div className={`main top-2 transition-all duration-300 ${(!collapsed) ? "sidebar-open" : ""}`}>
+            {(isLoading) ? <LoadingData collapsed={collapsed} /> : (
+                <div className={`main h-[90%] max-h-[90%] top-2 transition-all duration-300 ${(!collapsed) ? "sidebar-open" : ""}`}>
                     <div className='mx-auto w-full px-8 py-3 font-semibold text-xl text-[#333]'>
                         <p>DATA SENSOR</p>
                     </div>
@@ -86,8 +77,21 @@ function DataSensor(props) {
                         valueSearch={valueSearch}
                         isSearchAll={isSearchAll}
                         handleSearch={handleSearch} />
-                    <TableData listData={listData} setTypeSort={setTypeSort} setColumnSort={setColumnSort} handleSearch={handleSearch} />
-                    <DotPage pageSelect={pageSelect} setPageSelect={setPageSelect} total={total} handleSearch={handleSearch} />
+                    {(isNoValue) ? (<NoData />)
+                        : (<>
+                            <TableData
+                                listData={listData}
+                                setTypeSort={setTypeSort}
+                                setColumnSort={setColumnSort}
+                                handleSearch={handleSearch} />
+                            <DotPage
+                                pageSelect={pageSelect}
+                                setPageSelect={setPageSelect}
+                                total={total}
+                                handleSearch={handleSearch}
+                                setPageSize={setPageSize}
+                                pageSize={pageSize} />
+                        </>)}
                 </div>
             )}
         </>

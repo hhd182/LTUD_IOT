@@ -4,7 +4,7 @@ import { useState } from 'react';
 const { Column } = Table;
 
 function TableData(props) {
-    const { listData, setTypeSort, setColumnSort, handleSearch } = props
+    const { listData, setTypeSort, setColumnSort } = props
 
     const statusSort = {
         notSort: "",
@@ -47,8 +47,8 @@ function TableData(props) {
     }
 
     return (
-        <div className='w-[90%] mx-auto bg-white items-center shadow-sm mt-5 rounded-2xl'>
-            <Table dataSource={listData} pagination={false} bordered={true} size='small' >
+        <div className='w-[90%] h-[26rem] mx-auto bg-white items-center shadow-sm mt-5 rounded-2xl'>
+            <Table style={{ height: 400 }} dataSource={listData} pagination={false} bordered={true} size='small' scroll={{ y: 400, }}>
                 <Column title="Index" dataIndex="id" key="id" align='center' />
                 <Column
                     title={

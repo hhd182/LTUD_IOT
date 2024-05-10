@@ -34,6 +34,7 @@ function ButtonDataSenSor(props) {
                             style={{ maxWidth: "200px" }}
                             disabled={isSearchAll}
                             status={(isNumber) ? "" : "error"}
+                            onPressEnter={handleSearch}
                         />
                     </div>
                     <button className='flex items-center justify-center rounded-md w-10 hover:bg-gray-100'
