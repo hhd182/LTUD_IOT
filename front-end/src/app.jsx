@@ -20,7 +20,7 @@ function App() {
             <Router>
                 {/* <Header setIsLoading={setIsLoading} /> */}
                 <div className=" flex w-screen">
-                    <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} setIsLoading={setIsLoading} />
+                    <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} isLoading={isLoading} setIsLoading={setIsLoading} />
                     <Routes>
                         <Route path="/" element={<Dashboard
                             isLoading={isLoading}

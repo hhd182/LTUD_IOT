@@ -51,6 +51,12 @@ function DataSensor(props) {
     }, [pageSelect, pageSize, columnSearch, typeSort]);
 
     useEffect(() => {
+        if (!valueSearch) {
+            fetchData(value);
+        }
+    }, [valueSearch])
+
+    useEffect(() => {
         if (columnSearch == 'all') {
             setIsSearchAll(true)
         } else {
@@ -68,7 +74,7 @@ function DataSensor(props) {
         <>
             {(isLoading) ? <LoadingData collapsed={collapsed} /> : (
                 <div className={`main h-[90%] max-h-[90%] top-2 transition-all duration-300 ${(!collapsed) ? "sidebar-open" : ""}`}>
-                    <div className='mx-auto w-full px-8 py-3 font-semibold text-xl text-[#333]'>
+                    <div className='mx-auto w-full px-8 py-3 font-bold text-xl text-[#333]'>
                         <p>DATA SENSOR</p>
                     </div>
                     <ButtonDataSenSor
@@ -76,7 +82,8 @@ function DataSensor(props) {
                         setValueSearch={setValueSearch}
                         valueSearch={valueSearch}
                         isSearchAll={isSearchAll}
-                        handleSearch={handleSearch} />
+                        handleSearch={handleSearch}
+                        columnSearch={columnSearch} />
                     {(isNoValue) ? (<NoData />)
                         : (<>
                             <TableData

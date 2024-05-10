@@ -16,6 +16,7 @@ function ActionHistory(props) {
     const [dateTo, setDateTo] = useState()
     const [pageSelect, setPageSelect] = useState(1)
     const [pageSize, setPageSize] = useState(10)
+    const [deviceName, setdDeviceName] = useState("all")
     const [isNoValue, setIsNoValue] = useState(false)
 
 
@@ -40,11 +41,20 @@ function ActionHistory(props) {
         dayEnd: dateTo,
         page: pageSelect,
         limit: pageSize ?? 10,
+        deviceName: deviceName,
     }
 
     useEffect(() => {
         fetchData(value);
-    }, [pageSelect, pageSize]);
+    }, [pageSelect, pageSize, deviceName]);
+
+    useEffect(() => {
+        if (!datePre && !dateTo) {
+            handleSearch()
+        } else if (datePre && dateTo) {
+            handleSearch()
+        }
+    }, [datePre, dateTo]);
 
     const handleSearch = () => {
         setPageSelect(1)
@@ -56,10 +66,14 @@ function ActionHistory(props) {
         <>
             {isLoading ? <LoadingData collapsed={collapsed} /> :
                 (<div className={`main pt-2 transition-all duration-300 ${(!collapsed) ? "sidebar-open" : ""}`}>
-                    <div className='mx-auto w-full px-8 py-3 font-semibold text-xl text-[#333]'>
+                    <div className='mx-auto w-full px-8 py-3 font-bold text-xl text-[#333]'>
                         <p>ACTION HISTORY</p>
                     </div>
-                    <ButtonActionHistory setDate={setDatePre} setDateTo={setDateTo} handleSearch={handleSearch} />
+                    <ButtonActionHistory
+                        setDate={setDatePre}
+                        setDateTo={setDateTo}
+                        handleSearch={handleSearch}
+                        setdDeviceName={setdDeviceName} />
                     {(isNoValue) ? (<NoData />)
                         : (<>
                             <TableData

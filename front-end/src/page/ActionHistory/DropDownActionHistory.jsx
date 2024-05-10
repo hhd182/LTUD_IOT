@@ -1,8 +1,8 @@
 import { TreeSelect } from 'antd';
 import { memo } from 'react';
 
-const DropDownDataSensor = (props) => {
-    const { valueList, setValueList, setColumnSeacrch } = props
+const DropDownActionHistory = (props) => {
+    const { valueList, setValueList, setdDeviceName } = props
 
     let treeData = [
         {
@@ -10,26 +10,18 @@ const DropDownDataSensor = (props) => {
             title: 'All',
         },
         {
-            value: 'temperature',
-            title: 'Temperature',
-        },
-        {
-            value: 'light',
+            value: 'LIGHT',
             title: 'Light',
         },
         {
-            value: 'humidity',
-            title: 'Humidity',
-        },
-        {
-            value: 'createdAt',
-            title: 'Time',
+            value: 'FAN',
+            title: 'Fan',
         },
     ]
 
     const onChange = (newValue) => {
         setValueList(newValue);
-        setColumnSeacrch(newValue)
+        setdDeviceName(newValue)
     }
 
     return (
@@ -52,4 +44,4 @@ const DropDownDataSensor = (props) => {
         </>
     );
 };
-export default memo(DropDownDataSensor);
+export default memo(DropDownActionHistory);

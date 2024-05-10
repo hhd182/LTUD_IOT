@@ -3,8 +3,8 @@ const { Column } = Table;
 function TableData(props) {
     const { listAction } = props
     return (
-        <div className='w-[90%] h-[26rem] mx-auto bg-white items-center shadow-sm mt-5 rounded-2xl'>
-            <Table style={{ height: 400 }} dataSource={listAction} pagination={false} bordered={true} size='small' scroll={{ y: 400, }} >
+        <div className={`w-[90%] ${listAction.length >= 10 ? "h-[26rem]" : ""} mx-auto bg-white items-center shadow-sm mt-5 rounded-2xl`}>
+            <Table style={{ height: listAction.length >= 10 ? "400px" : "" }} dataSource={listAction} pagination={false} bordered={true} size='small' scroll={{ y: 400, }} >
                 <Column
                     title="ID"
                     dataIndex="id"

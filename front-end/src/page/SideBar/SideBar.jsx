@@ -8,11 +8,7 @@ import "./sidebar.scss"
 const { Sider } = Layout;
 
 function Sidebar(props) {
-    const { setIsLoading, collapsed, setCollapsed } = props
-
-    function handleClick() {
-        setIsLoading(true)
-    }
+    const { collapsed, setCollapsed } = props
 
     const items = [
         {
@@ -50,11 +46,6 @@ function Sidebar(props) {
         },
     ];
 
-
-    const handleMenuItemClick = (key) => {
-        console.log('Menu item clicked:', key);
-    }
-
     return (
         <div className={` sidebar transition-all h-screen duration-300 relative top-0 left-0 pt-4 ${collapsed ? "w-[80px]" : "w-[230px]"}`}>
             <div className="absolute right-[-20px] top-72 rounded-full justify-center cursor-pointer items-center w-10 h-10 flex z-40 shadow-md bg-white"
@@ -78,7 +69,7 @@ function Sidebar(props) {
                     </div>
                 </div>
                 <div className="sidebar-detail transition-all duration-300 pt-2">
-                    <Sider onClick={() => handleClick()} width={"100%"} className={`sidebar-list ${collapsed ? "p-0" : "sidebar-items"}`}>
+                    <Sider width={"100%"} className={`sidebar-list ${collapsed ? "p-0" : "sidebar-items"}`}>
                         <div className="demo-logo-vertical" />
                         {/* <Menu onClick={handleMenuItemClick} theme="light" defaultSelectedKeys={['1']} mode="inline" items={items} /> */}
                         <Menu theme="light" defaultSelectedKeys={['1']} mode="inline" items={items} />

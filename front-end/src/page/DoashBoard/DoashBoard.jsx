@@ -110,7 +110,7 @@ export default function DoashBoard(props) {
     return (
         <>
             {(isLoading) ? <LoadingData collapsed={collapsed} /> : (<div className={`main transition-all duration-300 top-2 ${(!collapsed) ? "sidebar-open" : ""}`}>
-                <div className='mx-auto w-full px-8 py-3 font-semibold text-xl text-[#333]'>
+                <div className='mx-auto w-full px-8 py-3 font-bold text-xl text-[#333]'>
                     <p>DOASH BOARD</p>
                 </div>
                 <div className=' container text-center mx-auto w-full px-8 grid grid-cols-3 gap-7 max-w-[112rem]'>

@@ -63,7 +63,7 @@ export const newAction = (req, res) => {
 
 export const getDataAction = async (req, res) => {
     try {
-        const { dayStart, dayEnd, page, limit } = req.query;
+        const { deviceName, dayStart, dayEnd, page, limit } = req.query;
 
         const pageNumber = parseInt(page, 10);
         if (isNaN(pageNumber) || pageNumber < 1) {
@@ -74,13 +74,29 @@ export const getDataAction = async (req, res) => {
         const next = (pageNumber - 1) * limitNumber;
 
         let valueSearch = {};
-        if (dayStart && dayEnd) {
+        if (deviceName && deviceName !== "all" && dayStart && dayEnd) {
             const startDay = convertDateFormat(dayStart);
             const endDay = convertDateFormat(dayEnd);
 
             valueSearch = {
-                createdAt: { gte: new Date(startDay), lte: new Date(endDay) }
+                AND: [
+                    {
+                        createdAt: { gte: new Date(startDay), lt: new Date(endDay) }
+                    },
+                    {
+                        device: deviceName
+                    }
+                ]
             };
+        } else if (dayStart && dayEnd) {
+            const startDay = convertDateFormat(dayStart);
+            const endDay = convertDateFormat(dayEnd);
+
+            valueSearch = {
+                createdAt: { gte: new Date(startDay), lt: new Date(endDay) }
+            };
+        } else if (!dayStart && !dayEnd && deviceName && deviceName !== "all") {
+            valueSearch = { device: deviceName }
         }
 
         const totalCount = await prisma.actionHistory.count({

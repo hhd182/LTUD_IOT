@@ -7,6 +7,7 @@
     background-position: center;
     position: fixed;
     right: 0;
+    font-family: "Roboto", sans-serif;
 }
 
 .sidebar-open {
@@ -40,15 +41,5 @@
 .contact {
     display: flex;
     align-items: center;
-    color: #333;
-}
-
-.contact p {
-    margin-right: 10px;
-}
-
-/* CSS cho biểu tượng liên hệ */
-.contact a i {
-    font-size: 20px;
     color: #333;
 }

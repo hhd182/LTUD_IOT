@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { convertDateFormatToVN } from '../logic/logic.js';
+import { convertDateFormatToVN, convertDateFormat, sortData } from '../logic/logic.js';
 
 const prisma = new PrismaClient();
 export const newDataSensor = async (req, res) => {
@@ -59,28 +59,37 @@ export const getFirstData = async (req, res) => {
 
 export const getDataSensor = async (req, res) => {
     try {
-        const { column, value, page, limit, columnsort, typesort } = req.query;
-
-        // Khong nhap gia tri khi tim kiem tat ca
-        const searchAll = column === "all";
-        if (searchAll && value) {
-            return res.status(400).json({ error: "When searching for 'all', you are not allowed to enter a 'value'!" });
-        }
+        let { column, value, page, limit, columnsort, typesort } = req.query;
         const pageNumber = parseInt(page, 10);
         if (isNaN(pageNumber) || pageNumber < 1) {
             return res.status(400).json({ error: "Invalid 'page' parameter" });
         }
-        let valueSearch
-        if (value != "") { valueSearch = parseInt(value) }
-        const limitNumber = parseInt(limit, 10)
+        // Khong nhap gia tri khi tim kiem tat ca
+        const searchAll = column === "all";
+        if (searchAll && value) {
+            value = ""
+        }
 
+        let valueSearch
+        if (value != "") {
+            if (column == "createdAt") {
+                const startDay = convertDateFormat(value);
+                const endDay = new Date(startDay);
+                endDay.setDate(endDay.getDate() + 1);
+                valueSearch = { gte: new Date(startDay), lt: new Date(endDay) }
+            } else {
+                valueSearch = parseInt(value);
+            }
+        }
+
+        const limitNumber = parseInt(limit, 10)
         const next = (pageNumber - 1) * limitNumber;
-        const searchCondition = searchAll ? {} : { [column]: valueSearch };
+
         const totalCount = await prisma.dataSensor.count({
-            where: searchCondition,
+            where: searchAll ? {} : { [column]: valueSearch },
         });
 
-        const listData = await prisma.dataSensor.findMany({
+        let listData = await prisma.dataSensor.findMany({
             where: searchAll ? {} : { [column]: valueSearch },
             skip: next,
             take: limitNumber,
@@ -97,39 +106,9 @@ export const getDataSensor = async (req, res) => {
         });
 
         if (typesort != "") {
-            let avalue;
-            let bvalue;
-            listData.sort((a, b) => {
-                switch (columnsort) {
-                    case 'id':
-                        avalue = a.id;
-                        bvalue = b.id
-                        break;
-                    case 'createdAt':
-                        avalue = a.createdAt
-                        bvalue = b.createdAt
-                        break
-                    case 'temperature':
-                        avalue = a.temperature
-                        bvalue = b.temperature
-                        break
-                    case 'humidity':
-                        avalue = a.humidity
-                        bvalue = b.humidity
-                        break
-                    case 'light':
-                        avalue = a.light
-                        bvalue = b.light
-                        break
-                    default:
-                        break
-                }
-                if (typesort === 'ASC') {
-                    return avalue - bvalue
-                }
-                return bvalue - avalue
-            })
+            listData = sortData(listData, columnsort, typesort);
         }
+
         return res.status(200).json({ listData, totalCount });
     } catch (error) {
         console.error("Error searching data in dataSensor:", error);

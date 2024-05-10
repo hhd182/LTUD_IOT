@@ -47,8 +47,8 @@ function TableData(props) {
     }
 
     return (
-        <div className='w-[90%] h-[26rem] mx-auto bg-white items-center shadow-sm mt-5 rounded-2xl'>
-            <Table style={{ height: 400 }} dataSource={listData} pagination={false} bordered={true} size='small' scroll={{ y: 400, }}>
+        <div className={`w-[90%] ${listData.length >= 10 ? "h-[26rem]" : ""}  mx-auto bg-white items-center shadow-sm mt-5 rounded-2xl`}>
+            <Table style={{ height: listData.length >= 10 ? "400px" : "" }} dataSource={listData} pagination={false} size='small' scroll={{ y: 400, }}>
                 <Column title="Index" dataIndex="id" key="id" align='center' />
                 <Column
                     title={
