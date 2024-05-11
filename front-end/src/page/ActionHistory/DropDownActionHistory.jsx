@@ -17,6 +17,10 @@ const DropDownActionHistory = (props) => {
             value: 'FAN',
             title: 'Fan',
         },
+        {
+            value: 'AIR',
+            title: 'Air',
+        },
     ]
 
     const onChange = (newValue) => {

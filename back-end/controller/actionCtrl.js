@@ -9,7 +9,7 @@ export const newAction = (req, res) => {
         const { device, action } = req.body;
         let result, topicPub, topicSub, message;
 
-        if (device === 'light' || device === 'fan') {
+        if (device === 'light' || device === 'fan' || device === 'air') {
             topicPub = `${device}control`;
             topicSub = `${device}status`;
             message = action.toUpperCase();
@@ -136,10 +136,10 @@ export const getFirstAction = async (req, res) => {
             orderBy: {
                 createdAt: 'desc', // Sắp xếp theo thời gian mới nhất
             },
-            take: 2, // Lấy hai bản ghi đầu tiên
+            take: 3, // Lấy hai bản ghi đầu tiên
         });
 
-        if (!data || data.length < 2) {
+        if (!data) {
             return res.status(404).json({ error: "Not enough unique data found" });
         }
 

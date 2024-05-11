@@ -14,6 +14,7 @@ function App() {
 
     const [isActionFan, setIsActionFan] = useState(false)
     const [isActionLight, setIsActionLight] = useState(false)
+    const [isActionAir, setIsActionAir] = useState(false)
 
     return (
         <>
@@ -30,6 +31,8 @@ function App() {
                             setIsActionFan={setIsActionFan}
                             isActionLight={isActionLight}
                             setIsActionLight={setIsActionLight}
+                            isActionAir={isActionAir}
+                            setIsActionAir={setIsActionAir}
                         />} />
                         <Route path="/datasensor" element={<DataSensor
                             isLoading={isLoading}

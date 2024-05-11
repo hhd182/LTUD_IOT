@@ -11,11 +11,13 @@ import { getData } from '../../api/ApiData';
 import { getFirstAction } from '../../api/ApiAction';
 
 export default function DoashBoard(props) {
-    const { isLoading, setIsLoading, collapsed, isActionFan, setIsActionFan, isActionLight, setIsActionLight } = props
+    const { isLoading, setIsLoading, collapsed, isActionFan, setIsActionFan, isActionLight, setIsActionLight, isActionAir, setIsActionAir } = props
     const [data, setData] = useState({})
     const [listData, setListData] = useState([[]])
+
     const [isFanOn, setIsFanOn] = useState(false)
     const [isLightOn, setIsLightOn] = useState(false)
+    const [isAirOn, setIsAirOn] = useState(false)
 
     const chartColor = {
         Temperature: "#eb0f0f",
@@ -43,16 +45,24 @@ export default function DoashBoard(props) {
     const fetchDataAction = async (req) => {
         try {
             const res = await getFirstAction(req);
-            console.log(res);
             if (res) {
-                const value = res[0].device
-                if (value == "FAN") {
-                    setIsFanOn((res[0].action == "on") ? true : false)
-                    setIsLightOn((res[1].action == "on") ? true : false)
-                } else {
-                    setIsLightOn((res[0].action == "on") ? true : false)
-                    setIsFanOn((res[1].action == "on") ? true : false)
-                }
+                let isAirOn = false;
+                let isLightOn = false;
+                let isFanOn = false;
+
+                res.forEach(item => {
+                    if (item.device === "AIR") {
+                        isAirOn = (item.action === "on");
+                    } else if (item.device === "LIGHT") {
+                        isLightOn = (item.action === "on");
+                    } else if (item.device === "FAN") {
+                        isFanOn = (item.action === "on");
+                    }
+                });
+
+                setIsAirOn(isAirOn);
+                setIsLightOn(isLightOn);
+                setIsFanOn(isFanOn);
             }
 
         } catch (error) {
@@ -65,12 +75,11 @@ export default function DoashBoard(props) {
     }, [])
 
     useEffect(() => {
-        // Tải dữ liệu ngay khi component được render
         fetchData();
-        const intervalId = setInterval(fetchData, 5000); // Thiết lập tự động tải lại sau mỗi 5 giây
+        const intervalId = setInterval(fetchData, 5000);
 
-        return () => clearInterval(intervalId); // Hủy interval khi component unmount
-    }, []); // Chỉ chạy một lần khi component được mount
+        return () => clearInterval(intervalId);
+    }, []);
 
 
     const handleClick = async (buttonClick, typeClick) => {
@@ -79,10 +88,14 @@ export default function DoashBoard(props) {
             action: typeClick
         }
 
-        if (buttonClick == "light") {
+        if (buttonClick === "light") {
             setIsActionLight(true)
-        } else {
+        }
+        if (buttonClick === "fan") {
             setIsActionFan(true)
+        }
+        if (buttonClick === "air") {
+            setIsActionAir(true)
         }
 
         const res = await newActionSensor(value)
@@ -114,6 +127,20 @@ export default function DoashBoard(props) {
                     setIsLightOn(false)
                 }
             }
+
+            if (buttonClick == "air" && typeClick == "on") {
+                if (!isAirOn) {
+                    setIsAirOn(true)
+                    setIsActionAir(false)
+                }
+            }
+
+            if (buttonClick == "air" && typeClick == "off") {
+                if (isAirOn) {
+                    setIsActionAir(false)
+                    setIsAirOn(false)
+                }
+            }
         }
     }
 
@@ -136,8 +163,8 @@ export default function DoashBoard(props) {
                 <div className=' container text-center mx-auto w-full px-8 grid grid-cols-3 gap-7 max-w-[112rem]'>
                     <Enity data={data} />
                 </div>
-                <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
-                    <div className=" chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-6 mt-3 rounded-2xl">
+                <div className='mt-4 h-[60%] container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
+                    <div className=" chart-container w-[67%] h-full bg-[#f5f5f5] shadow-sm pt-2 mt-3 rounded-2xl">
                         <div className='flex gap-x-3 justify-center'>
                             <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("temp") }}>
                                 <ChartIcon color={chartColor.Temperature} />
@@ -156,13 +183,15 @@ export default function DoashBoard(props) {
                         </div>
                         <ChartComponent listData={listData} tempHide={tempHide} humHide={humHide} lightHide={lightHide} />
                     </div>
-                    <div className=' button-container w-[32%] h-96 mt-3 flex flex-col'>
+                    <div className=' button-container w-[32%] h-full mt-3 grid grid-row-3 gap-4'>
                         <ButtonComponent
                             handleClick={handleClick}
                             isFanOn={isFanOn}
                             isLightOn={isLightOn}
+                            isAirOn={isAirOn}
                             isActionFan={isActionFan}
                             isActionLight={isActionLight}
+                            isActionAir={isActionAir}
                         />
                     </div>
                 </div>
