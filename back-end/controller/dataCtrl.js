@@ -37,14 +37,19 @@ export const newData = async (data) => {
 
 export const getFirstData = async (req, res) => {
     try {
-        const data = await prisma.dataSensor.findMany({
+        const dataDB = await prisma.dataSensor.findMany({
             take: 10,
             orderBy: {
                 createdAt: 'desc'
             }
         });
 
-        data.createdAt = convertDateFormatToVN("time", data.createdAt)
+        const data = dataDB.map(item => {
+            return {
+                ...item,
+                createdAt: convertDateFormatToVN("time", item.createdAt)
+            };
+        });
 
         if (!data) {
             return res.status(404).json({ error: "No data found in the specified table" });

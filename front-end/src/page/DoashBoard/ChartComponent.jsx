@@ -4,24 +4,21 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 function ChartComponent(props) {
     const { listData, tempHide, humHide, lightHide } = props;
 
-
     return (
-        <ResponsiveContainer width="100%" height="80%">
+        <ResponsiveContainer width="100%" height="90%">
             <LineChart
-                width={500}
-                height={300}
                 data={listData}
                 margin={{
-                    top: 5,
-                    right: 30,
                     left: 20,
+                    right: 20,
+                    top: 5,
                     bottom: 5,
                 }}
             >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
-                <YAxis yAxisId="left" domain={[0, 120]} />
-                <YAxis yAxisId="right" orientation="right" domain={[0, 1000]} />
+                <XAxis dataKey="createdAt" angle={-30} textAnchor="middle" fontSize={12} tickMargin={10} />
+                <YAxis yAxisId="left" domain={[0, 120]} fontSize={13} />
+                <YAxis yAxisId="right" orientation="right" domain={[0, 1000]} fontSize={13} />
                 <Tooltip />
                 <Line
                     name='Temperature'
