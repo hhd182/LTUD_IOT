@@ -9,7 +9,6 @@ import './doashboard.scss'
 import { newActionSensor } from '../../api/ApiAction';
 import { getData } from '../../api/ApiData';
 import { getFirstAction } from '../../api/ApiAction';
-import { CheckWarning } from '../../logic/CheckWarning';
 
 export default function DoashBoard(props) {
     const { isLoading, setIsLoading, collapsed, isActionFan, setIsActionFan, isActionLight, setIsActionLight } = props
@@ -28,16 +27,9 @@ export default function DoashBoard(props) {
     const [humHide, setHumHide] = useState(false)
     const [lightHide, setLightHide] = useState(false)
 
-    const [isWarning, setIsWarning] = useState({
-        temperature: false,
-        humidity: false,
-        light: false
-    });
-
     const fetchData = async () => {
         const dt = await getData();
         const reversedDt = [...dt].reverse();
-        CheckWarning(reversedDt[9], setIsWarning)
         setData(reversedDt[9]);
         setListData(reversedDt);
         setIsLoading(false);
@@ -46,7 +38,6 @@ export default function DoashBoard(props) {
     const fetchDataAction = async (req) => {
         try {
             const res = await getFirstAction(req);
-            console.log(res);
             if (res) {
                 const value = res[0].device
                 if (value == "FAN") {
@@ -136,7 +127,7 @@ export default function DoashBoard(props) {
                     <p>DOASH BOARD</p>
                 </div>
                 <div className=' container text-center mx-auto w-full px-8 grid grid-cols-3 gap-7 max-w-[112rem]'>
-                    <Enity data={data} isWarning={isWarning} />
+                    <Enity data={data} />
                 </div>
                 <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
                     <div className=" chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-6 mt-3 rounded-2xl">
