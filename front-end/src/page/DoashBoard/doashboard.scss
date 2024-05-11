@@ -9,17 +9,10 @@
     width: calc(100vw - 230px)
 }
 
-.temp {
-    background-image: linear-gradient(to top right, #f7e9e9, #ff0000);
-}
 
-.hum {
-    background-image: linear-gradient(to top right, #d6d5fd, #0015ff);
-}
 
-.light {
-    background-image: linear-gradient(to top right, #fafdeb, #f1ff27);
-
+.this-warning {
+    background-color: #fd5518 !important;
 }
 
 .chart-container,

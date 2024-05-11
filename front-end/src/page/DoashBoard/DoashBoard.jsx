@@ -9,6 +9,7 @@ import './doashboard.scss'
 import { newActionSensor } from '../../api/ApiAction';
 import { getData } from '../../api/ApiData';
 import { getFirstAction } from '../../api/ApiAction';
+import { CheckWarning } from '../../logic/CheckWarning';
 
 export default function DoashBoard(props) {
     const { isLoading, setIsLoading, collapsed, isActionFan, setIsActionFan, isActionLight, setIsActionLight } = props
@@ -27,16 +28,18 @@ export default function DoashBoard(props) {
     const [humHide, setHumHide] = useState(false)
     const [lightHide, setLightHide] = useState(false)
 
+    const [isWarning, setIsWarning] = useState({
+        temperature: false,
+        humidity: false,
+        light: false
+    });
+
     const fetchData = async () => {
         const dt = await getData();
-        setData(dt)
-        setListData(prevList => {
-            const newList = [...prevList, dt];
-            if (newList.length > 10) {
-                newList.shift(); // Xóa phần tử đầu nếu có nhiều hơn 10
-            }
-            return newList;
-        });
+        const reversedDt = [...dt].reverse();
+        CheckWarning(reversedDt[9], setIsWarning)
+        setData(reversedDt[9]);
+        setListData(reversedDt);
         setIsLoading(false);
     };
 
@@ -65,12 +68,11 @@ export default function DoashBoard(props) {
     }, [])
 
     useEffect(() => {
-        // Tải dữ liệu ngay khi component được render
         fetchData();
-        const intervalId = setInterval(fetchData, 5000); // Thiết lập tự động tải lại sau mỗi 5 giây
+        const intervalId = setInterval(fetchData, 5000);
 
-        return () => clearInterval(intervalId); // Hủy interval khi component unmount
-    }, []); // Chỉ chạy một lần khi component được mount
+        return () => clearInterval(intervalId);
+    }, []);
 
 
     const handleClick = async (buttonClick, typeClick) => {
@@ -134,7 +136,7 @@ export default function DoashBoard(props) {
                     <p>DOASH BOARD</p>
                 </div>
                 <div className=' container text-center mx-auto w-full px-8 grid grid-cols-3 gap-7 max-w-[112rem]'>
-                    <Enity data={data} />
+                    <Enity data={data} isWarning={isWarning} />
                 </div>
                 <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
                     <div className=" chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-6 mt-3 rounded-2xl">

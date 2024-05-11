@@ -37,7 +37,8 @@ export const newData = async (data) => {
 
 export const getFirstData = async (req, res) => {
     try {
-        const data = await prisma.dataSensor.findFirst({
+        const data = await prisma.dataSensor.findMany({
+            take: 10,
             orderBy: {
                 createdAt: 'desc'
             }
