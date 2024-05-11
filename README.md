@@ -37,6 +37,9 @@ DB_NAME = 'your database'
 MQTT_USERNAME = 'your broker username'
 MQTT_PASSWORD = 'your broker password'
 MQTT_PORT = 'your port broker connect'
+
+DATABASE_URL="mysql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+MQTT_BROKER_URL="http://localhost:${MQTT_PORT}"
 ```
 
 ---
