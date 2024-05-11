@@ -31,14 +31,9 @@ export default function DoashBoard(props) {
 
     const fetchData = async () => {
         const dt = await getData();
-        setData(dt)
-        setListData(prevList => {
-            const newList = [...prevList, dt];
-            if (newList.length > 10) {
-                newList.shift(); // Xóa phần tử đầu nếu có nhiều hơn 10
-            }
-            return newList;
-        });
+        const reversedDt = [...dt].reverse();
+        setData(reversedDt[9]);
+        setListData(reversedDt);
         setIsLoading(false);
     };
 
