@@ -1,28 +1,9 @@
-/* eslint-disable react/prop-types */
+import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useState } from 'react';
 
 function ChartComponent(props) {
-    let { listData } = props;
+    const { listData, tempHide, humHide, lightHide } = props;
 
-    const [hiddenLines, setHiddenLines] = useState([]);
-
-    const toggleLineVisibility = (dataKey) => {
-        setHiddenLines((prev) => {
-            // Nếu dòng hiện tại đã ẩn, thì xoá khỏi danh sách ẩn
-            if (prev.includes(dataKey)) {
-                return prev.filter((key) => key !== dataKey);
-            }
-            // Nếu dòng hiện tại chưa ẩn, thì thêm vào danh sách ẩn
-            return [...prev, dataKey];
-        });
-    };
-
-    const handleLegendClick = (e) => {
-        // Lấy key của dòng được nhấn từ sự kiện click
-        const dataKey = e.dataKey;
-        toggleLineVisibility(dataKey);
-    };
 
     return (
         <ResponsiveContainer width="100%" height="100%">
@@ -39,12 +20,28 @@ function ChartComponent(props) {
             >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="time" />
-                <YAxis />
+                <YAxis yAxisId="left" domain={[0, 120]} />
+                <YAxis yAxisId="right" orientation="right" domain={[0, 1000]} />
                 <Tooltip />
-                <Legend verticalAlign="top" onClick={() => handleLegendClick()} />
-                <Line type="monotone" dataKey="temperature" stroke="#eb0f0f" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="humidity" stroke="#145ede" />
-                <Line type="monotone" dataKey="light" stroke="#efef0a" />
+                <Line
+                    name='Temperature'
+                    type="monotone"
+                    dataKey="temperature"
+                    stroke={!tempHide ? "#eb0f0f" : "transparent"}
+                    yAxisId="left"
+                    activeDot={{ r: 8 }} />
+                <Line
+                    name='Humidity'
+                    type="monotone"
+                    dataKey="humidity"
+                    stroke={!humHide ? "#145ede" : "transparent"}
+                    yAxisId="left" />
+                <Line
+                    name='Light'
+                    type="monotone"
+                    dataKey="light"
+                    stroke={!lightHide ? "#efef0a" : "transparent"}
+                    yAxisId="right" />
             </LineChart>
         </ResponsiveContainer>
     );

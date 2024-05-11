@@ -4,6 +4,7 @@ import Enity from './Enity';
 import ButtonComponent from './ButtonComponent';
 import ChartComponent from "./ChartComponent";
 import LoadingData from '../LoadingData/LoadingData';
+import ChartIcon from '../../../public/svg/ChartIcon';
 import './doashboard.scss'
 import { newActionSensor } from '../../api/ApiAction';
 import { getData } from '../../api/ApiData';
@@ -13,9 +14,18 @@ export default function DoashBoard(props) {
     const { isLoading, setIsLoading, collapsed, isActionFan, setIsActionFan, isActionLight, setIsActionLight } = props
     const [data, setData] = useState({})
     const [listData, setListData] = useState([[]])
-
     const [isFanOn, setIsFanOn] = useState(false)
     const [isLightOn, setIsLightOn] = useState(false)
+
+    const chartColor = {
+        Temperature: "#eb0f0f",
+        Humidity: "#145ede",
+        Light: "#efef0a"
+    }
+
+    const [tempHide, setTempHide] = useState(false)
+    const [humHide, setHumHide] = useState(false)
+    const [lightHide, setLightHide] = useState(false)
 
     const fetchData = async () => {
         const dt = await getData();
@@ -107,6 +117,16 @@ export default function DoashBoard(props) {
         }
     }
 
+    const handleLegendClick = (line) => {
+        if (line == "hum") {
+            setHumHide(!humHide)
+        } else if (line == "temp") {
+            setTempHide(!tempHide)
+        } else {
+            setLightHide(!lightHide)
+        }
+    };
+
     return (
         <>
             {(isLoading) ? <LoadingData collapsed={collapsed} /> : (<div className={`main transition-all duration-300 top-2 ${(!collapsed) ? "sidebar-open" : ""}`}>
@@ -118,7 +138,23 @@ export default function DoashBoard(props) {
                 </div>
                 <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
                     <div className=" chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-6 mt-3 rounded-2xl">
-                        <ChartComponent listData={listData} />
+                        <div className='flex gap-x-3 justify-center'>
+                            <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("temp") }}>
+                                <ChartIcon color={chartColor.Temperature} />
+                                <span className="text-[#eb0f0f]">Temperature</span>
+                            </span>
+
+                            <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("hum") }}>
+                                <ChartIcon color={chartColor.Humidity} />
+                                <span className='text-[#145ede]'>Humidity</span>
+                            </span>
+
+                            <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("light") }}>
+                                <ChartIcon color={chartColor.Light} />
+                                <span className='text-[#efef0a]'>Light</span>
+                            </span>
+                        </div>
+                        <ChartComponent listData={listData} tempHide={tempHide} humHide={humHide} lightHide={lightHide} />
                     </div>
                     <div className=' button-container w-[32%] h-96 mt-3 flex flex-col'>
                         <ButtonComponent
