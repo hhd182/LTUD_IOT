@@ -41,6 +41,9 @@ MQTT_PORT = 'your port broker connect'
 
 ---
 ### Database
+```
+config database: prisma/schema.prisma
+```
 ```bash
 $ npx prisma migrate dev
 ```
