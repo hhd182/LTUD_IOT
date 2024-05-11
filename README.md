@@ -44,9 +44,11 @@ MQTT_BROKER_URL="http://localhost:${MQTT_PORT}"
 
 ---
 ### Database
+config database
 ```
-config database: back-end/prisma/schema.prisma
+back-end/prisma/schema.prisma
 ```
+Connect
 ```bash
 $ npx prisma migrate dev
 ```
