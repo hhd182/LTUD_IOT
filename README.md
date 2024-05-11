@@ -5,6 +5,7 @@
 2. [Backend](#backend)
     - [Installation](#installation)
     - [Config](#config)
+    - [Database](#database)
     - [Running](#running)
 3. [Frontend](#frontend)
     - [Installation](#installation-1)
