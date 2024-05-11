@@ -26,7 +26,7 @@ $ npm i
 ```
 ---
 ### Config
-Create file `.env` from `.env.example`
+Create file `.env`
 ```
 DB_USERNAME = 'your username'
 DB_PASSWORD = 'your password'
