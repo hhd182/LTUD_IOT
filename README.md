@@ -40,6 +40,12 @@ MQTT_PORT = 'your port broker connect'
 ```
 
 ---
+### Database
+```bash
+$ npx prisma migrate dev
+```
+
+---
 ### Running
 ```bash
 $ npm start
