@@ -11,7 +11,7 @@ DHT_Unified dht(DHTPIN, DHTTYPE);
 
 const char *ssid = "hh";
 const char *password = "01082002c";
-const char *mqtt_server = "192.168.146.154";
+const char *mqtt_server = "192.168.14.154";
 const char *mqtt_username = "hhd";
 const char *mqtt_password = "hhd";
 

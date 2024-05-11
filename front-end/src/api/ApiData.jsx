@@ -9,16 +9,8 @@ const path = {
 async function getData() {
     try {
         const res = await axios.get(path.getData)
-        const { temperature, humidity, light, dust, createdAt } = res.data
-        const myData = {
-            "temperature": temperature,
-            "humidity": humidity,
-            "light": light,
-            "dust": dust,
-            "time": createdAt
-        }
-        // console.log(mydata);
-        return myData;
+
+        return res.data;
     } catch (error) {
         console.log("Error: ", error.message);
         return null;

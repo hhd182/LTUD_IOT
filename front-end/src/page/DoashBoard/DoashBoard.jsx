@@ -31,14 +31,9 @@ export default function DoashBoard(props) {
 
     const fetchData = async () => {
         const dt = await getData();
-        setData(dt)
-        setListData(prevList => {
-            const newList = [...prevList, dt];
-            if (newList.length > 10) {
-                newList.shift(); // Xóa phần tử đầu nếu có nhiều hơn 10
-            }
-            return newList;
-        });
+        const reversedDt = [...dt].reverse();
+        setData(reversedDt[9]);
+        setListData(reversedDt);
         setIsLoading(false);
     };
 
@@ -141,7 +136,7 @@ export default function DoashBoard(props) {
                     <Enity data={data} />
                 </div>
                 <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
-                    <div className=" chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-6 mt-3 rounded-2xl">
+                    <div className=" chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-3 mt-3 rounded-2xl">
                         <div className='flex gap-x-3 justify-center'>
                             <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("temp") }}>
                                 <ChartIcon color={chartColor.Temperature} />

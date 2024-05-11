@@ -6,10 +6,8 @@ function ChartComponent(props) {
 
 
     return (
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="90%">
             <LineChart
-                width={500}
-                height={300}
                 data={listData}
                 margin={{
                     top: 5,
@@ -19,7 +17,7 @@ function ChartComponent(props) {
                 }}
             >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
+                <XAxis dataKey="createdAt" angle={-30} textAnchor="middle" fontSize={12} tickMargin={10} />
                 <YAxis yAxisId="left" domain={[0, 120]} />
                 <YAxis yAxisId="right" orientation="right" domain={[0, 1000]} />
                 <Tooltip />
