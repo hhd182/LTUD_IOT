@@ -16,6 +16,7 @@ function TableData(props) {
         temperature: statusSort.notSort,
         humidity: statusSort.notSort,
         light: statusSort.notSort,
+        dust: statusSort.notSort,
     });
 
     function handleSortClick(column) {
@@ -106,6 +107,26 @@ function TableData(props) {
                     }
                     dataIndex="light"
                     key="light"
+                    align='center' />
+
+                <Column
+                    title={
+                        <div
+                            className='flex justify-center cursor-pointer select-none '
+                            onClick={(e) => handleSortClick(e.target.innerText)}>
+                            <span>
+                                Dust
+                            </span>
+                            <div className=' absolute right-0 pr-4 '>
+                                <div className=' flex flex-col '>
+                                    <CaretUpOutlined className={`icon-sort ${sortState.dust == statusSort.asc ? "icon-active" : ""}`} />
+                                    <CaretDownOutlined className={`icon-sort ${sortState.dust == statusSort.desc ? "icon-active" : ""}`} />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    dataIndex="dust"
+                    key="dust"
                     align='center' />
                 <Column
                     title="Time"

@@ -20,12 +20,14 @@ export default function DoashBoard(props) {
     const chartColor = {
         Temperature: "#eb0f0f",
         Humidity: "#145ede",
-        Light: "#efef0a"
+        Light: "#efef0a",
+        Dust: "#eca833"
     }
 
     const [tempHide, setTempHide] = useState(false)
     const [humHide, setHumHide] = useState(false)
     const [lightHide, setLightHide] = useState(false)
+    const [dustHide, setDustHide] = useState(false)
 
     const fetchData = async () => {
         const dt = await getData();
@@ -122,8 +124,10 @@ export default function DoashBoard(props) {
             setHumHide(!humHide)
         } else if (line == "temp") {
             setTempHide(!tempHide)
-        } else {
+        } else if (line == "light") {
             setLightHide(!lightHide)
+        } else {
+            setDustHide(!dustHide)
         }
     };
 
@@ -133,7 +137,7 @@ export default function DoashBoard(props) {
                 <div className='mx-auto w-full px-8 py-3 font-bold text-xl text-[#333]'>
                     <p>DOASH BOARD</p>
                 </div>
-                <div className=' container text-center mx-auto w-full px-8 grid grid-cols-3 gap-7 max-w-[112rem]'>
+                <div className=' container text-center mx-auto w-full px-8 grid grid-cols-4 gap-3 max-w-[112rem]'>
                     <Enity data={data} />
                 </div>
                 <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
@@ -153,8 +157,18 @@ export default function DoashBoard(props) {
                                 <ChartIcon color={chartColor.Light} />
                                 <span className='text-[#efef0a]'>Light</span>
                             </span>
+
+                            <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("dust") }}>
+                                <ChartIcon color={chartColor.Dust} />
+                                <span className='text-[#eca833]'>Dust</span>
+                            </span>
                         </div>
-                        <ChartComponent listData={listData} tempHide={tempHide} humHide={humHide} lightHide={lightHide} />
+                        <ChartComponent
+                            listData={listData}
+                            tempHide={tempHide}
+                            humHide={humHide}
+                            lightHide={lightHide}
+                            dustHide={dustHide} />
                     </div>
                     <div className=' button-container w-[32%] h-96 mt-3 flex flex-col'>
                         <ButtonComponent

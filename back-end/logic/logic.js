@@ -54,6 +54,10 @@ export const sortData = (data, columnsort, typesort) => {
                 avalue = a.light;
                 bvalue = b.light;
                 break;
+            case 'dust':
+                avalue = a.dust;
+                bvalue = b.dust;
+                break;
             default:
                 break;
         }

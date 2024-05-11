@@ -25,5 +25,6 @@ model DataSensor {
   temperature Int
   humidity    Int
   light       Int
+  dust        Int
   createdAt   DateTime @default(now())
 }

@@ -22,12 +22,13 @@ export const newDataSensor = async (req, res) => {
 export const newData = async (data) => {
     try {
         const dataSensor = JSON.parse(data)
-        const { temperature, humidity, light } = dataSensor
+        const { temperature, humidity, light, dust } = dataSensor
         await prisma.dataSensor.create({
             data: {
                 temperature,
                 humidity,
-                light
+                light,
+                dust
             }
         });
     } catch (error) {

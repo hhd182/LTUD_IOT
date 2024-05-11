@@ -14,6 +14,7 @@ CREATE TABLE `DataSensor` (
     `temperature` INTEGER NOT NULL,
     `humidity` INTEGER NOT NULL,
     `light` INTEGER NOT NULL,
+    `dust` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)

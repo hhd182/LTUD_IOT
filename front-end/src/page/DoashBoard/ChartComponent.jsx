@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function ChartComponent(props) {
-    const { listData, tempHide, humHide, lightHide } = props;
+    const { listData, tempHide, humHide, lightHide, dustHide } = props;
 
 
     return (
@@ -42,6 +42,12 @@ function ChartComponent(props) {
                     dataKey="light"
                     stroke={!lightHide ? "#efef0a" : "transparent"}
                     yAxisId="right" />
+                <Line
+                    name='Dust'
+                    type="monotone"
+                    dataKey="dust"
+                    stroke={!dustHide ? "#eca833" : "transparent"}
+                    yAxisId="left" />
             </LineChart>
         </ResponsiveContainer>
     );

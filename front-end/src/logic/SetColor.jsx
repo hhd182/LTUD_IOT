@@ -34,4 +34,16 @@ function setColorLight(data) {
     return colorYellow
 }
 
-export { setColorTemp, setColorHum, setColorLight }
+function setColorDust(data) {
+    let colorGray;
+    if (data > 66) {
+        colorGray = "#fb8400";
+    } else if (data > 33) {
+        colorGray = "#fb9c32"
+    } else {
+        colorGray = "#ffb460"
+    }
+    return colorGray
+}
+
+export { setColorTemp, setColorHum, setColorLight, setColorDust }

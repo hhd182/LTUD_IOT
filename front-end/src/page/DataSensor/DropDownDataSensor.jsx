@@ -22,9 +22,14 @@ const DropDownDataSensor = (props) => {
             title: 'Humidity',
         },
         {
+            value: 'dust',
+            title: 'Dust',
+        },
+        {
             value: 'createdAt',
             title: 'Time',
         },
+
     ]
 
     const onChange = (newValue) => {
