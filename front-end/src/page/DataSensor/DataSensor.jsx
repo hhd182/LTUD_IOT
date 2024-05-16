@@ -10,7 +10,7 @@ import { getListData } from "../../api/ApiData";
 
 function DataSensor(props) {
     const { isLoading, setIsLoading, collapsed } = props;
-    const [columnSearch, setColumnSeacrch] = useState('all')
+    const [columnSearch, setColumnSearch] = useState('all')
     const [valueSearch, setValueSearch] = useState('')
     const [columnSort, setColumnSort] = useState('')
     const [typeSort, setTypeSort] = useState('')
@@ -48,7 +48,7 @@ function DataSensor(props) {
 
     useEffect(() => {
         fetchData(value);
-    }, [pageSelect, pageSize, columnSearch, typeSort]);
+    }, [pageSelect, pageSize, typeSort]);
 
     useEffect(() => {
         if (!valueSearch) {
@@ -78,7 +78,7 @@ function DataSensor(props) {
                         <p>DATA SENSOR</p>
                     </div>
                     <ButtonDataSenSor
-                        setColumnSeacrch={setColumnSeacrch}
+                        setColumnSearch={setColumnSearch}
                         setValueSearch={setValueSearch}
                         valueSearch={valueSearch}
                         isSearchAll={isSearchAll}

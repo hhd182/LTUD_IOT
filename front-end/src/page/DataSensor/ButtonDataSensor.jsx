@@ -9,7 +9,7 @@ import { Input, DatePicker } from 'antd';
 function ButtonDataSenSor(props) {
     const dateFormat = 'DD/MM/YYYY'
     const customFormat = (value) => ` ${value.format(dateFormat)}`
-    const { setColumnSeacrch, setValueSearch, valueSearch, isSearchAll, handleSearch, columnSearch } = props
+    const { setColumnSearch, setValueSearch, valueSearch, isSearchAll, handleSearch, columnSearch } = props
 
     const [valueList, setValueList] = useState("all");
     useEffect(() => {
@@ -33,38 +33,24 @@ function ButtonDataSenSor(props) {
         <>
             <div className=' w-[90%] mx-auto flex gap-x-7 bg-white border rounded-lg min-h-16 items-center pl-6 shadow-sm'>
                 <div>
-                    <DropDownDataSensor valueList={valueList} setValueList={setValueList} setColumnSeacrch={setColumnSeacrch} />
+                    <DropDownDataSensor
+                        valueList={valueList}
+                        setValueList={setValueList}
+                        setColumnSearch={setColumnSearch}
+                        handleSearch={handleSearch} />
                 </div>
                 {
                     (columnSearch != "all" ? (
                         <div className='flex gap-x-1 w-full'>
                             <div className=' flex flex-col '>
-                                {(columnSearch == "createdAt") ?
-                                    (<div className='border-b'>
-                                        <DatePicker
-                                            onChange={onChange}
-                                            format={customFormat}
-                                            style={{ width: "180px" }}
-                                            allowClear
-                                            placement="bottomLeft"
-                                            bordered={false}
-                                        />
-                                    </div>
-
-                                    )
-                                    : (
-                                        <Input onChange={handleChange}
-                                            value={valueSearch}
-                                            allowClear
-                                            placeholder="Search"
-                                            style={{ width: "180px" }}
-                                            status={(isNumber) ? "" : "error"}
-                                            onPressEnter={handleSearch}
-                                        />
-                                    )
-                                }
-
-
+                                <Input onChange={handleChange}
+                                    value={valueSearch}
+                                    allowClear
+                                    placeholder="Search"
+                                    style={{ width: "180px" }}
+                                    status={(isNumber || columnSearch == "createdAt") ? "" : "error"}
+                                    onPressEnter={handleSearch}
+                                />
                             </div>
                             <button className='flex items-center justify-center rounded-md w-10 hover:bg-gray-100'
                                 onClick={() => handleSearch()}

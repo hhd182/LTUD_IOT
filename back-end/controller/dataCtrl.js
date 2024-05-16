@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { convertDateFormatToVN, convertDateFormat, sortData } from '../logic/logic.js';
+import { convertDateFormatToVN, sortData, getTime } from '../logic/logic.js';
+import { format } from 'date-fns';
 
 const prisma = new PrismaClient();
 export const newDataSensor = async (req, res) => {
@@ -23,11 +24,15 @@ export const newData = async (data) => {
     try {
         const dataSensor = JSON.parse(data)
         const { temperature, humidity, light } = dataSensor
+        const thisDate = new Date();
+        const createdAt = format(thisDate, "dd/MM/yyyy HH:mm:ss").toString();
+        // console.log(createdAt);
         await prisma.dataSensor.create({
             data: {
                 temperature,
                 humidity,
-                light
+                light,
+                createdAt
             }
         });
     } catch (error) {
@@ -40,14 +45,14 @@ export const getFirstData = async (req, res) => {
         const dataDB = await prisma.dataSensor.findMany({
             take: 10,
             orderBy: {
-                createdAt: 'desc'
+                id: 'desc'
             }
         });
 
         const data = dataDB.map(item => {
             return {
                 ...item,
-                createdAt: convertDateFormatToVN("time", item.createdAt)
+                createdAt: getTime(item.createdAt)
             };
         });
 
@@ -62,56 +67,49 @@ export const getFirstData = async (req, res) => {
     }
 };
 
-
 export const getDataSensor = async (req, res) => {
     try {
         let { column, value, page, limit, columnsort, typesort } = req.query;
         const pageNumber = parseInt(page, 10);
+
         if (isNaN(pageNumber) || pageNumber < 1) {
             return res.status(400).json({ error: "Invalid 'page' parameter" });
         }
-        // Khong nhap gia tri khi tim kiem tat ca
+
         const searchAll = column === "all";
         if (searchAll && value) {
-            value = ""
+            value = "";
         }
 
-        let valueSearch
-        if (value != "") {
-            if (column == "createdAt") {
-                const startDay = convertDateFormat(value);
-                const endDay = new Date(startDay);
-                endDay.setDate(endDay.getDate() + 1);
-                valueSearch = { gte: new Date(startDay), lt: new Date(endDay) }
+        let whereClause;
+        if (value !== "") {
+            if (column === "createdAt") {
+                whereClause = { createdAt: { contains: value } };
             } else {
-                valueSearch = parseInt(value);
+                value = parseInt(value);
+                whereClause = { [column]: value };
             }
+        } else {
+            whereClause = {};
         }
 
-        const limitNumber = parseInt(limit, 10)
+        const limitNumber = parseInt(limit, 10);
         const next = (pageNumber - 1) * limitNumber;
 
-        const totalCount = await prisma.dataSensor.count({
-            where: searchAll ? {} : { [column]: valueSearch },
-        });
+        const totalCount = await prisma.dataSensor.count({ where: whereClause });
 
         let listData = await prisma.dataSensor.findMany({
-            where: searchAll ? {} : { [column]: valueSearch },
+            where: whereClause,
             skip: next,
             take: limitNumber,
-            orderBy: {
-                createdAt: 'desc'
-            }
+            orderBy: { id: 'desc' }
         });
 
         if (!listData || listData.length === 0) {
             return res.status(404).json({ error: `No data found with ${column} equal to ${value}` });
         }
-        listData.forEach(item => {
-            item.createdAt = convertDateFormatToVN("year", item.createdAt);
-        });
 
-        if (typesort != "") {
+        if (typesort !== "") {
             listData = sortData(listData, columnsort, typesort);
         }
 

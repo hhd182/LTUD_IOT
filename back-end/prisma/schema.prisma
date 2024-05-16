@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -21,9 +22,9 @@ model ActionHistory {
 }
 
 model DataSensor {
-  id          Int      @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   temperature Int
   humidity    Int
   light       Int
-  createdAt   DateTime @default(now())
+  createdAt   String
 }

@@ -2,7 +2,7 @@ import { TreeSelect } from 'antd';
 import { memo } from 'react';
 
 const DropDownDataSensor = (props) => {
-    const { valueList, setValueList, setColumnSeacrch } = props
+    const { valueList, setValueList, setColumnSearch } = props
 
     let treeData = [
         {
@@ -29,7 +29,7 @@ const DropDownDataSensor = (props) => {
 
     const onChange = (newValue) => {
         setValueList(newValue);
-        setColumnSeacrch(newValue)
+        setColumnSearch(newValue)
     }
 
     return (

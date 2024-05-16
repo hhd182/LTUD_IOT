@@ -13,7 +13,7 @@ function ButtonComponent(props) {
     return (
         <>
             <div className='flex w-full a justify-center items-center shadow-sm flex-col rounded-2xl h-32 bg-[#eeeeee]' >
-                <img className='transition-all' width={80} src={isFanOn ? fanOn : fanOff} alt="" />
+                <img className='transition-all' width={70} src={isFanOn ? fanOn : fanOff} alt="" />
                 {!isActionFan ? (
                     <div className="flex">
                         <button
@@ -36,7 +36,7 @@ function ButtonComponent(props) {
             </div >
 
             <div className='flex w-full a justify-center items-center shadow-sm flex-col rounded-2xl h-32 bg-[#eeeeee] ' >
-                <img className='transition-all' width={80} src={isLightOn ? lightOn : lightOff} alt="" />
+                <img className='transition-all' width={70} src={isLightOn ? lightOn : lightOff} alt="" />
                 {!isActionLight ? (
                     <div className="flex">
                         <button
@@ -60,7 +60,7 @@ function ButtonComponent(props) {
             </div>
 
             <div className='flex w-full a justify-center items-center shadow-sm flex-col rounded-2xl h-32 bg-[#eeeeee] ' >
-                <img className='transition-all' width={80} src={isAirOn ? airOn : airOff} alt="" />
+                <img className='transition-all' width={70} src={isAirOn ? airOn : airOff} alt="" />
                 {!isActionAir ? (
                     <div className="flex">
                         <button

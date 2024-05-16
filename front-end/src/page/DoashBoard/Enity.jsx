@@ -13,7 +13,7 @@ function Enity(props) {
         <>
             <div className='temp flex justify-center items-center shadow-sm flex-col rounded-2xl h-36 gap-y-3 transi'
                 style={{ backgroundImage: `linear-gradient(to top right, #f7e9e9, ${colorTemp})` }}>
-                <FaTemperatureLow className='text-red-600 text-6xl' />
+                <FaTemperatureLow className='text-red-600 text-6xl' fontSize={20} />
                 <p className="title mr-5 text-2xl text-[#333] font-bold">
                     <span>{data.temperature}</span>
                     <span> ℃</span>
@@ -22,7 +22,7 @@ function Enity(props) {
 
             <div className=' hum flex justify-center items-center shadow-sm flex-col rounded-2xl h-36 gap-y-3'
                 style={{ backgroundImage: `linear-gradient(to top right, #d6d5fd, ${colorHum})` }}>
-                <FaDroplet className='text-blue-900 text-6xl' />
+                <FaDroplet className='text-blue-900 text-6xl' fontSize={20} />
                 <p className="title mr-5 text-2xl text-[#333] font-bold">
                     <span>{data.humidity}</span>
                     <span> %</span>
@@ -31,7 +31,7 @@ function Enity(props) {
 
             <div className='light flex justify-center items-center shadow-sm flex-col rounded-2xl h-36 gap-y-3'
                 style={{ backgroundImage: `linear-gradient(to top right, #fafdeb, ${colorLight})` }}>
-                <FaRegLightbulb className='text-yellow-600 text-6xl' />
+                <FaRegLightbulb className='text-yellow-600 text-6xl' fontSize={20} />
                 <p className="title mr-5 text-2xl text-[#333] font-bold">
                     <span>{data.light}</span>
                     <span> Lx</span>
