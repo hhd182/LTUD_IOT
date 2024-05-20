@@ -115,7 +115,7 @@ function TableData(props) {
                             className='flex justify-center cursor-pointer select-none '
                             onClick={(e) => handleSortClick(e.target.innerText)}>
                             <span>
-                                Dust
+                                Wind
                             </span>
                             <div className=' absolute right-0 pr-4 '>
                                 <div className=' flex flex-col '>

@@ -2,25 +2,23 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function ChartComponent(props) {
-    const { listData, tempHide, humHide, lightHide, dustHide } = props;
+    const { listData, tempHide, humHide, lightHide } = props;
 
 
     return (
-        <ResponsiveContainer width="100%" height="90%">
+        <ResponsiveContainer width="100%" height="96%">
             <LineChart
                 data={listData}
-                margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                }}
-            >
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="createdAt" angle={-30} textAnchor="middle" fontSize={12} tickMargin={10} />
                 <YAxis yAxisId="left" domain={[0, 120]} />
                 <YAxis yAxisId="right" orientation="right" domain={[0, 1000]} />
                 <Tooltip />
+                <Legend
+                    verticalAlign="top"
+                    align="center"
+                />
                 <Line
                     name='Temperature'
                     type="monotone"
@@ -40,12 +38,6 @@ function ChartComponent(props) {
                     dataKey="light"
                     stroke={!lightHide ? "#efef0a" : "transparent"}
                     yAxisId="right" />
-                <Line
-                    name='Dust'
-                    type="monotone"
-                    dataKey="dust"
-                    stroke={!dustHide ? "#eca833" : "transparent"}
-                    yAxisId="left" />
             </LineChart>
         </ResponsiveContainer>
     );

@@ -23,7 +23,7 @@ const DropDownDataSensor = (props) => {
         },
         {
             value: 'dust',
-            title: 'Dust',
+            title: 'Wind',
         },
         {
             value: 'createdAt',

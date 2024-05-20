@@ -9,6 +9,7 @@ import './doashboard.scss'
 import { newActionSensor } from '../../api/ApiAction';
 import { getData } from '../../api/ApiData';
 import { getFirstAction } from '../../api/ApiAction';
+import ChartComponent2 from './char2';
 
 export default function DoashBoard(props) {
     const { isLoading, setIsLoading, collapsed, isActionFan, setIsActionFan, isActionLight, setIsActionLight } = props
@@ -136,33 +137,15 @@ export default function DoashBoard(props) {
                     <Enity data={data} />
                 </div>
                 <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
-                    <div className=" chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-3 mt-3 rounded-2xl">
-                        <div className='flex gap-x-3 justify-center'>
-                            <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("temp") }}>
-                                <ChartIcon color={chartColor.Temperature} />
-                                <span className="text-[#eb0f0f]">Temperature</span>
-                            </span>
-
-                            <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("hum") }}>
-                                <ChartIcon color={chartColor.Humidity} />
-                                <span className='text-[#145ede]'>Humidity</span>
-                            </span>
-
-                            <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("light") }}>
-                                <ChartIcon color={chartColor.Light} />
-                                <span className='text-[#efef0a]'>Light</span>
-                            </span>
-
-                            <span className='cursor-pointer select-none' onClick={() => { handleLegendClick("dust") }}>
-                                <ChartIcon color={chartColor.Dust} />
-                                <span className='text-[#eca833]'>Dust</span>
-                            </span>
-                        </div>
+                    <div className=" flex chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-3 mt-3 rounded-2xl">
                         <ChartComponent
                             listData={listData}
                             tempHide={tempHide}
                             humHide={humHide}
                             lightHide={lightHide}
+                            dustHide={dustHide} />
+                        <ChartComponent2
+                            listData={listData}
                             dustHide={dustHide} />
                     </div>
                     <div className=' button-container w-[32%] h-96 mt-3 flex flex-col'>
