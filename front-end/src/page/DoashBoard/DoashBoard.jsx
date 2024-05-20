@@ -136,19 +136,19 @@ export default function DoashBoard(props) {
                 <div className=' container text-center mx-auto w-full px-8 grid grid-cols-4 gap-3 max-w-[112rem]'>
                     <Enity data={data} />
                 </div>
-                <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-7 max-w-[112rem]'>
-                    <div className=" flex chart-container w-[67%] h-96 bg-[#f5f5f5] shadow-sm pt-3 mt-3 rounded-2xl">
+                <div className='mt-4 container text-center mx-auto w-full px-8 flex gap-y-3 gap-x-3 max-w-[112rem]'>
+                    <div className=" flex chart-container w-[75%] h-96 bg-[#f5f5f5] shadow-sm pt-3 mt-3 rounded-2xl pr-1">
                         <ChartComponent
                             listData={listData}
                             tempHide={tempHide}
                             humHide={humHide}
                             lightHide={lightHide}
-                            dustHide={dustHide} />
+                        />
                         <ChartComponent2
                             listData={listData}
                             dustHide={dustHide} />
                     </div>
-                    <div className=' button-container w-[32%] h-96 mt-3 flex flex-col'>
+                    <div className=' button-container w-[25%] h-96 mt-3 pl-1 flex flex-col'>
                         <ButtonComponent
                             handleClick={handleClick}
                             isFanOn={isFanOn}

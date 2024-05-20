@@ -21,10 +21,10 @@ model ActionHistory {
 }
 
 model DataSensor {
-  id          Int      @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   temperature Int
   humidity    Int
   light       Int
   dust        Int
-  createdAt   DateTime @default(now())
+  createdAt   String
 }

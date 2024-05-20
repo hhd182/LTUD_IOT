@@ -39,30 +39,14 @@ function ButtonDataSenSor(props) {
                     (columnSearch != "all" ? (
                         <div className='flex gap-x-1 w-full'>
                             <div className=' flex flex-col '>
-                                {(columnSearch == "createdAt") ?
-                                    (<div className='border-b'>
-                                        <DatePicker
-                                            onChange={onChange}
-                                            format={customFormat}
-                                            style={{ width: "180px" }}
-                                            allowClear
-                                            placement="bottomLeft"
-                                            bordered={false}
-                                        />
-                                    </div>
-
-                                    )
-                                    : (
-                                        <Input onChange={handleChange}
-                                            value={valueSearch}
-                                            allowClear
-                                            placeholder="Search"
-                                            style={{ width: "180px" }}
-                                            status={(isNumber) ? "" : "error"}
-                                            onPressEnter={handleSearch}
-                                        />
-                                    )
-                                }
+                                <Input onChange={handleChange}
+                                    value={valueSearch}
+                                    allowClear
+                                    placeholder="Search"
+                                    style={{ width: "180px" }}
+                                    status={(isNumber || columnSearch == "createdAt") ? "" : "error"}
+                                    onPressEnter={handleSearch}
+                                />
 
 
                             </div>

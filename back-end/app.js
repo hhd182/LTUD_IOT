@@ -34,7 +34,7 @@ mqttClient.on("message", (topic, message) => {
         newData(data)
     }
     const data = message.toString();
-    console.log(data);
+    // console.log(data);
 });
 
 app.listen(port, () => {

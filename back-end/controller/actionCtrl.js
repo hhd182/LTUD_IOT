@@ -9,7 +9,7 @@ export const newAction = (req, res) => {
         const { device, action } = req.body;
         let result, topicPub, topicSub, message;
 
-        if (device === 'light' || device === 'fan') {
+        if (device === 'light' || device === 'fan' || device === 'air') {
             topicPub = `${device}control`;
             topicSub = `${device}status`;
             message = action.toUpperCase();
@@ -119,7 +119,7 @@ export const getDataAction = async (req, res) => {
         }
 
         data.forEach(item => {
-            item.createdAt = convertDateFormatToVN("year", item.createdAt);
+            item.createdAt = convertDateFormatToVN(item.createdAt);
         });
 
         return res.status(200).json({ data, totalCount });
@@ -132,25 +132,19 @@ export const getDataAction = async (req, res) => {
 export const getFirstAction = async (req, res) => {
     try {
         const data = await prisma.actionHistory.findMany({
-            distinct: ['device'], // Lấy các bản ghi không trùng lặp theo thuộc tính 'action'
+            distinct: ['device'],
             orderBy: {
-                createdAt: 'desc', // Sắp xếp theo thời gian mới nhất
+                createdAt: 'desc',
             },
-            take: 2, // Lấy hai bản ghi đầu tiên
+            take: 3,
         });
 
-        if (!data || data.length < 2) {
+        if (!data) {
             return res.status(404).json({ error: "Not enough unique data found" });
         }
-
-        data.forEach((item) => {
-            item.createdAt = convertDateFormatToVN("time", item.createdAt);
-        });
-
         return res.status(200).json(data);
     } catch (error) {
         console.error("Error retrieving data:", error);
         return res.status(500).json({ error: "Internal server error" });
     }
 };
-

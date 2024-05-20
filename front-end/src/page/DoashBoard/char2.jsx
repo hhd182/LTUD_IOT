@@ -18,7 +18,7 @@ function ChartComponent2(props) {
             >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="createdAt" angle={-30} textAnchor="middle" fontSize={12} tickMargin={10} />
-                <YAxis yAxisId="left" domain={[0, 120]} />
+                <YAxis yAxisId="left" domain={[0, 50]} />
                 <Tooltip />
                 <Legend
                     verticalAlign="top"

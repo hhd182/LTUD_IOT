@@ -9,7 +9,7 @@ function ChartComponent(props) {
         <ResponsiveContainer width="100%" height="96%">
             <LineChart
                 data={listData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                margin={{ top: 5, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="createdAt" angle={-30} textAnchor="middle" fontSize={12} tickMargin={10} />
                 <YAxis yAxisId="left" domain={[0, 120]} />

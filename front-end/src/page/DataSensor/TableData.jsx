@@ -113,7 +113,7 @@ function TableData(props) {
                     title={
                         <div
                             className='flex justify-center cursor-pointer select-none '
-                            onClick={(e) => handleSortClick(e.target.innerText)}>
+                            onClick={(e) => handleSortClick("Dust")}>
                             <span>
                                 Wind
                             </span>
