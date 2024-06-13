@@ -68,7 +68,7 @@ export const getDataSensor = async (req, res) => {
         let whereClause;
         if (value !== "") {
             if (column === "createdAt") {
-                whereClause = { createdAt: { contains: value } };
+                whereClause = { createdAt: { contains: value.trim() } };
             } else {
                 value = parseInt(value);
                 whereClause = { [column]: value };

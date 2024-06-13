@@ -48,7 +48,7 @@ function DataSensor(props) {
 
     useEffect(() => {
         fetchData(value);
-    }, [pageSelect, pageSize, columnSearch, typeSort]);
+    }, [pageSelect, pageSize, typeSort]);
 
     useEffect(() => {
         if (!valueSearch) {
@@ -58,6 +58,7 @@ function DataSensor(props) {
 
     useEffect(() => {
         if (columnSearch == 'all') {
+            fetchData(value);
             setIsSearchAll(true)
         } else {
             setIsSearchAll(false)
